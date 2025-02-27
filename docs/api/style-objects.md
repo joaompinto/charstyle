@@ -16,7 +16,7 @@ Style(color=None, bg_color=None, style=None)
 
 - `color` (ForegroundColor | None): The text color to apply
 - `bg_color` (BackgroundColor | None): The background color to apply
-- `style` (TextStyle | tuple[TextStyle, ...] | str | None): The text style(s) to apply
+- `style` (TextStyle | tuple[TextStyle, ...] | None): The text style(s) to apply
 
 ### Usage
 

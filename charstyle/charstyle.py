@@ -70,7 +70,7 @@ def colored(
     text: str,
     color: ForegroundColor | None = None,
     bg_color: BackgroundColor | None = None,
-    style: TextStyle | tuple[TextStyle, ...] | str | None = None,
+    style: TextStyle | tuple[TextStyle, ...] | None = None,
 ) -> str:
     """
     Apply color, background color, and/or style to text.
@@ -79,8 +79,7 @@ def colored(
         text (str): The text to style
         color (ForegroundColor, optional): Text color enum
         bg_color (BackgroundColor, optional): Background color enum
-        style (TextStyle, tuple, or str, optional): Text style enum, a tuple of TextStyle enums,
-            or a combined style string with semicolons
+        style (TextStyle, tuple, optional): Text style enum or a tuple of TextStyle enums
 
     Returns:
         str: The styled text
@@ -112,7 +111,7 @@ def colored(
 def black(
     text: str,
     bg: BackgroundColor | None = None,
-    style: TextStyle | tuple[TextStyle, ...] | str | None = None,
+    style: TextStyle | tuple[TextStyle, ...] | None = None,
 ) -> str:
     """Apply black color to text."""
     return colored(text, BLACK, bg, style)
@@ -121,7 +120,7 @@ def black(
 def red(
     text: str,
     bg: BackgroundColor | None = None,
-    style: TextStyle | tuple[TextStyle, ...] | str | None = None,
+    style: TextStyle | tuple[TextStyle, ...] | None = None,
 ) -> str:
     """Apply red color to text."""
     return colored(text, RED, bg, style)
@@ -130,7 +129,7 @@ def red(
 def green(
     text: str,
     bg: BackgroundColor | None = None,
-    style: TextStyle | tuple[TextStyle, ...] | str | None = None,
+    style: TextStyle | tuple[TextStyle, ...] | None = None,
 ) -> str:
     """Apply green color to text."""
     return colored(text, GREEN, bg, style)
@@ -139,7 +138,7 @@ def green(
 def yellow(
     text: str,
     bg: BackgroundColor | None = None,
-    style: TextStyle | tuple[TextStyle, ...] | str | None = None,
+    style: TextStyle | tuple[TextStyle, ...] | None = None,
 ) -> str:
     """Apply yellow color to text."""
     return colored(text, YELLOW, bg, style)
@@ -148,7 +147,7 @@ def yellow(
 def blue(
     text: str,
     bg: BackgroundColor | None = None,
-    style: TextStyle | tuple[TextStyle, ...] | str | None = None,
+    style: TextStyle | tuple[TextStyle, ...] | None = None,
 ) -> str:
     """Apply blue color to text."""
     return colored(text, BLUE, bg, style)
@@ -157,7 +156,7 @@ def blue(
 def magenta(
     text: str,
     bg: BackgroundColor | None = None,
-    style: TextStyle | tuple[TextStyle, ...] | str | None = None,
+    style: TextStyle | tuple[TextStyle, ...] | None = None,
 ) -> str:
     """Apply magenta color to text."""
     return colored(text, MAGENTA, bg, style)
@@ -166,7 +165,7 @@ def magenta(
 def cyan(
     text: str,
     bg: BackgroundColor | None = None,
-    style: TextStyle | tuple[TextStyle, ...] | str | None = None,
+    style: TextStyle | tuple[TextStyle, ...] | None = None,
 ) -> str:
     """Apply cyan color to text."""
     return colored(text, CYAN, bg, style)
@@ -175,7 +174,7 @@ def cyan(
 def white(
     text: str,
     bg: BackgroundColor | None = None,
-    style: TextStyle | tuple[TextStyle, ...] | str | None = None,
+    style: TextStyle | tuple[TextStyle, ...] | None = None,
 ) -> str:
     """Apply white color to text."""
     return colored(text, WHITE, bg, style)
@@ -241,7 +240,7 @@ class Style:
         self,
         color: ForegroundColor | None = None,
         bg_color: BackgroundColor | None = None,
-        style: TextStyle | tuple[TextStyle, ...] | str | None = None,
+        style: TextStyle | tuple[TextStyle, ...] | None = None,
     ) -> None:
         """
         Initialize a Style instance.
@@ -249,8 +248,7 @@ class Style:
         Args:
             color (ForegroundColor, optional): Text color enum
             bg_color (BackgroundColor, optional): Background color enum
-            style (TextStyle, tuple, or str, optional): Text style enum, a tuple of TextStyle enums,
-                or a combined style string with semicolons
+            style (TextStyle, tuple, optional): Text style enum or a tuple of TextStyle enums
         """
         self.color = color
         self.bg_color = bg_color
@@ -260,7 +258,7 @@ class Style:
         if isinstance(style, tuple):
             self.style = ";".join(map(str, style))
         else:
-            self.style = style
+            self.style = str(style) if style is not None else None
 
     def apply(self, text: str) -> str:
         """

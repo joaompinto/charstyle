@@ -143,4 +143,3 @@ print(colored("Error message", style=(RED, BOLD)))
 
 # Using tuples with style_split
 print(style_split("Status: Success", ":", (BOLD, RED), (GREEN, BOLD)))
-```

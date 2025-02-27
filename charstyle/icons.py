@@ -3,6 +3,10 @@ Terminal icons/emojis for charstyle.
 
 This module provides a collection of widely supported terminal icons and emojis
 that should display correctly on most modern terminals.
+
+Most spinners have been found at:
+https://raw.githubusercontent.com/sindresorhus/cli-spinners/main/spinners.json
+
 """
 
 from enum import StrEnum

@@ -91,10 +91,26 @@ def show_styles() -> None:
         ("WHITE", WHITE, "BRIGHT_WHITE", BRIGHT_WHITE),
     ]
 
+    # Calculate the padding needed for each color name
+    # Magenta is the longest: "This text is magenta"
+    max_text_length = len("This text is magenta")
+    max_bright_text_length = len("This text is bright magenta")
+    
     for name, color, bright_name, bright_color in colors:
-        regular_text = f"{name:<15}: {colored('This text is ' + name.lower(), color)}"
-        bright_text = f"{bright_name:<15}: {colored('This text is bright ' + bright_name.split('_')[1].lower(), bright_color)}"
-        print(f"{regular_text:<60} {bright_text}")
+        # Pad the regular text color to match the length of magenta
+        regular_text = name.lower()
+        regular_padding = max_text_length - len(f"This text is {regular_text}")
+        regular_display = f"This text is {regular_text}" + " " * regular_padding
+        
+        # Pad the bright text color to match the length of bright magenta
+        bright_text = name.lower()
+        bright_padding = max_bright_text_length - len(f"This text is bright {bright_text}")
+        bright_display = f"This text is bright {bright_text}" + " " * bright_padding
+        
+        regular_colored = f"{name:<15}: {colored(regular_display, color)}"
+        bright_colored = f"{bright_name:<15}: {colored(bright_display, bright_color)}"
+        
+        print(f"{regular_colored:<60} {bright_colored}")
 
     print("\n=== Background Colors ===")
     bg_colors = [
@@ -108,19 +124,23 @@ def show_styles() -> None:
         ("BG_WHITE", BG_WHITE, "BG_BRIGHT_WHITE", BG_BRIGHT_WHITE),
     ]
 
-    # Find the longest text for padding
-    longest_regular_text = "This background is magenta"
-    longest_bright_text = "This background is bright magenta"
+    # Calculate the padding needed for each color name
+    # Magenta is the longest: "This background is magenta"
+    max_length = len("This background is magenta")
     
     for name, bg_color, bright_name, bright_bg_color in bg_colors:
-        regular_text = f"This background is {name.split('_')[1].lower()}"
-        regular_text = regular_text.ljust(len(longest_regular_text))
+        # Pad the regular background text to match the length of magenta
+        regular_text = name.lower().replace('bg_', '')
+        regular_padding = max_length - len(f"This background is {regular_text}")
+        regular_display = f"This background is {regular_text}" + " " * regular_padding
         
-        bright_text = f"This background is bright {bright_name.split('_')[2].lower()}"
-        bright_text = bright_text.ljust(len(longest_bright_text))
+        # Pad the bright background text to match the length of magenta
+        bright_text = name.lower().replace('bg_', '')
+        bright_padding = max_length - len(f"This background is bright {bright_text}")
+        bright_display = f"This background is bright {bright_text}" + " " * bright_padding
         
-        regular_bg = f"{name:<15}: {colored(regular_text, bg_color=bg_color)}"
-        bright_bg = f"{bright_name:<20}: {colored(bright_text, bg_color=bright_bg_color)}"
+        regular_bg = f"{name:<15}: {colored(regular_display, bg_color=bg_color)}"
+        bright_bg = f"{bright_name:<17}: {colored(bright_display, bg_color=bright_bg_color)}"
         
         print(f"{regular_bg:<60} {bright_bg}")
 
@@ -136,19 +156,19 @@ def show_styles() -> None:
     ]
 
     for name, style in styles:
-        print(f"{name}: {colored('This text is ' + name.lower(), style=style)}")
+        print(f"{name}: {colored('This text has ' + name.lower() + ' style', style=style)}")
 
     print("\n=== Combined Styles ===")
-    print(f"BOLD + RED: {bold(red('Bold and red text'))}")
+    print(f"BOLD + RED: {bold(red('This text is bold and red'))}")
     print(
-        f"UNDERLINE + GREEN + BG_YELLOW: {underline(colored('Underlined green text on yellow background', GREEN, BG_YELLOW))}"
+        f"UNDERLINE + GREEN + BG_YELLOW: {underline(colored('This text is underlined, green, with yellow background', GREEN, BG_YELLOW))}"
     )
 
     # Style class example
     print("\n=== Style Class ===")
     error_style = Style(color=RED, bg_color=BG_BLACK, style=BOLD)
     print(f"Error style: {error_style('This is an error message')}")
-
+    
     success_style = Style(color=GREEN, style=BOLD)
     print(f"Success style: {success_style('This is a success message')}")
 
