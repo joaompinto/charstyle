@@ -1,0 +1,8 @@
+[venv]
+# Create a virtual environment in the project directory
+in_project = true
+
+[python]
+# Use Python 3.11 as the default version
+use_pyenv = false
+path = "python3.11"
