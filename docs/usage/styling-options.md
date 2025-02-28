@@ -1,145 +1,270 @@
 # Styling Options
 
-Charstyle provides multiple ways to apply styles to your text. This guide explains when to use each approach.
+charstyle provides multiple ways to apply styles to your text. This guide explains when to use each approach.
 
 ## Style Constants
 
-The most basic way to style text is using the built-in style constants:
+The most basic way to style text is using the built-in style enum values:
 
 ```python
-from charstyle import RED, BOLD, colored
+from charstyle import styled, Style
 
 # Using a color constant
-print(colored("This is red text", color=RED))
+print(styled("This is red text", Style.RED))
 
 # Using a text style constant
-print(colored("This is bold text", style=BOLD))
+print(styled("This is bold text", Style.BOLD))
 ```
 
 ## Combining Styles
 
-When you need to apply multiple styles to the same text, you have two options: using `Style` objects or using tuples of style constants.
+When you need to apply multiple styles to the same text, you can use tuples of style enum values.
 
-### Style Objects vs. Tuples
+### Style Tuples
 
-Both approaches allow you to combine styles, but they have different use cases and advantages.
+Style tuples allow you to combine multiple styles in a single parameter.
 
-## When to Use Style Objects
+## When to Use Style Tuples
 
-The `Style` class provides a way to create reusable style combinations with explicit control over all aspects of styling.
+Style tuples provide a concise way to combine multiple styles.
 
-### 1. When you need to combine color, background color, and text style separately
+### 1. When you need to combine color, background color, and text style
 
 ```python
-from charstyle import RED, BG_BLACK, BOLD, Style
+from charstyle import styled, Style
 
-# Style object allows explicit specification of each component
-error_style = Style(color=RED, bg_color=BG_BLACK, style=BOLD)
-print(error_style("Error: Operation failed"))
+# Combine foreground color, background color, and text style
+print(styled("Warning", (Style.RED, Style.BG_BLACK, Style.BOLD)))
+
+# Create a reusable style tuple
+error_style = (Style.RED, Style.BOLD)
+print(styled("Error: File not found", error_style))
 ```
 
-### 2. When you need to reuse the same style combination multiple times
+### 2. When you need to apply multiple text styles
 
 ```python
-from charstyle import YELLOW, BOLD, ITALIC, Style
+from charstyle import styled, Style
 
-# Define once, use many times
-warning_style = Style(color=YELLOW, style=(BOLD, ITALIC))
-print(warning_style("Warning: This operation might take a while"))
-print(warning_style("Warning: Insufficient disk space"))
+# Combine multiple text styles
+warning_style = (Style.YELLOW, Style.BOLD, Style.ITALIC)
+print(styled("Warning: This operation is irreversible", warning_style))
 ```
 
-### 3. When you need to specify background colors
+### 3. When you need to create high-contrast combinations
 
 ```python
-from charstyle import BLACK, BG_YELLOW, Style
+from charstyle import styled, Style
 
-# Style objects make it clearer when specifying background colors
-highlight_style = Style(color=BLACK, bg_color=BG_YELLOW)
-print(highlight_style("IMPORTANT NOTICE"))
+# Create high-contrast text
+print(styled("CAUTION", (Style.BLACK, Style.BG_YELLOW)))
 ```
 
-### 4. When you need more complex style combinations
+### 4. When you need complex styling combinations
 
 ```python
-from charstyle import BRIGHT_GREEN, BG_BLUE, BOLD, UNDERLINE, Style
+from charstyle import styled, Style
 
-# Multiple text styles with both foreground and background colors
-complex_style = Style(color=BRIGHT_GREEN, bg_color=BG_BLUE, style=(BOLD, UNDERLINE))
-print(complex_style("SUCCESS: All tests passed"))
+# Complex styling with multiple attributes
+fancy_style = (Style.BRIGHT_GREEN, Style.BG_BLUE, Style.BOLD, Style.UNDERLINE)
+print(styled("Success: Operation completed", fancy_style))
 ```
 
-## When to Use Tuples
+## Available Styles
 
-Tuples provide a more concise way to combine styles for one-off usage.
+charstyle provides a comprehensive set of styles through the `Style` enum. Here's a complete list of all available styles:
 
-### 1. When you only need to combine text styles (no colors)
+### Text Styles
+
+| Style Name | Description |
+|------------|-------------|
+| `Style.NORMAL` | Reset all styles to normal |
+| `Style.BOLD` | Bold text |
+| `Style.DIM` | Dimmed text (reduced intensity) |
+| `Style.ITALIC` | Italic text |
+| `Style.UNDERLINE` | Underlined text |
+| `Style.BLINK` | Blinking text (not supported in all terminals) |
+| `Style.REVERSE` | Reverse video (swap foreground and background colors) |
+| `Style.HIDDEN` | Hidden text (invisible) |
+| `Style.STRIKE` | Strikethrough text |
+
+### Foreground Colors
+
+| Color Name | Description |
+|------------|-------------|
+| `Style.BLACK` | Black text |
+| `Style.RED` | Red text |
+| `Style.GREEN` | Green text |
+| `Style.YELLOW` | Yellow text |
+| `Style.BLUE` | Blue text |
+| `Style.MAGENTA` | Magenta text |
+| `Style.CYAN` | Cyan text |
+| `Style.WHITE` | White text |
+| `Style.DEFAULT` | Default text color |
+
+### Bright Foreground Colors
+
+| Color Name | Description |
+|------------|-------------|
+| `Style.BRIGHT_BLACK` | Bright black (gray) text |
+| `Style.BRIGHT_RED` | Bright red text |
+| `Style.BRIGHT_GREEN` | Bright green text |
+| `Style.BRIGHT_YELLOW` | Bright yellow text |
+| `Style.BRIGHT_BLUE` | Bright blue text |
+| `Style.BRIGHT_MAGENTA` | Bright magenta text |
+| `Style.BRIGHT_CYAN` | Bright cyan text |
+| `Style.BRIGHT_WHITE` | Bright white text |
+
+### Background Colors
+
+| Color Name | Description |
+|------------|-------------|
+| `Style.BG_BLACK` | Black background |
+| `Style.BG_RED` | Red background |
+| `Style.BG_GREEN` | Green background |
+| `Style.BG_YELLOW` | Yellow background |
+| `Style.BG_BLUE` | Blue background |
+| `Style.BG_MAGENTA` | Magenta background |
+| `Style.BG_CYAN` | Cyan background |
+| `Style.BG_WHITE` | White background |
+| `Style.BG_DEFAULT` | Default background color |
+
+### Bright Background Colors
+
+| Color Name | Description |
+|------------|-------------|
+| `Style.BG_BRIGHT_BLACK` | Bright black (gray) background |
+| `Style.BG_BRIGHT_RED` | Bright red background |
+| `Style.BG_BRIGHT_GREEN` | Bright green background |
+| `Style.BG_BRIGHT_YELLOW` | Bright yellow background |
+| `Style.BG_BRIGHT_BLUE` | Bright blue background |
+| `Style.BG_BRIGHT_MAGENTA` | Bright magenta background |
+| `Style.BG_BRIGHT_CYAN` | Bright cyan background |
+| `Style.BG_BRIGHT_WHITE` | Bright white background |
+
+## Example: Using Different Style Categories
 
 ```python
-from charstyle import BOLD, ITALIC, colored
+from charstyle import styled, Style
 
-# Simple combination of text styles
-print(colored("Important note", style=(BOLD, ITALIC)))
+# Text style + foreground color + background color
+print(styled("Styled text", (Style.BOLD, Style.RED, Style.BG_YELLOW)))
+
+# Bright foreground color
+print(styled("Bright color", Style.BRIGHT_CYAN))
+
+# Bright background color
+print(styled("Bright background", Style.BG_BRIGHT_MAGENTA))
+
+# Multiple text styles
+print(styled("Bold and italic", (Style.BOLD, Style.ITALIC)))
 ```
 
-### 2. When you need a simple combination of a color and a text style
+## Styling Multiple Parts of Text
+
+When you need to apply different styles to different parts of a string:
+
+### 1. Using styled_split
 
 ```python
-from charstyle import RED, BOLD, colored
+from charstyle import styled, Style, styled_split
 
-# Concise way to specify color + style
-print(colored("Error", style=(RED, BOLD)))
+# Split by delimiter and apply different styles
+print(styled_split("Status: Active", ":", (Style.BOLD, Style.ITALIC), Style.GREEN))
 ```
 
-### 3. When you want more concise, inline styling
+### 2. Using styled_format
 
 ```python
-from charstyle import BLUE, BOLD, GREEN, style_format
+from charstyle import styled, Style, styled_format
 
-# More compact for one-off usage
-print(style_format("{header} {value}", 
-                  header=("Title:", (BLUE, BOLD)), 
-                  value=("Content", GREEN)))
+# Format with styled values
+print(
+    styled_format(
+        "{} = {}",
+        ("username", Style.BLUE),
+        ("admin", Style.GREEN)
+    )
+)
 ```
 
-### 4. When you're using style_complex, style_split, or other functions that accept multiple styles
+### 3. Using styled_pattern
 
 ```python
-from charstyle import BLUE, BOLD, GREEN, style_complex
+from charstyle import styled, Style, styled_pattern
 
-# Cleaner when passing multiple styles to functions
-print(style_complex("Key=Value", r"=", (BLUE, BOLD), GREEN))
+# Style using regex pattern
+print(
+    styled_pattern(
+        "2023-05-15 10:30:45 [INFO] User logged in",
+        r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) \[(\w+)\] (.*)",
+        Style.BLUE,      # timestamp
+        Style.YELLOW,    # log level
+        Style.GREEN      # message
+    )
+)
 ```
 
-## General Rule of Thumb
-
-- **Use Style objects** when you need explicit control over all aspects of styling (foreground color, background color, and text style) or when you need to reuse the style.
-- **Use tuples** for simpler, one-off style combinations, especially when you're just combining a color with a text style.
-
-The tuple approach is generally more concise and readable for simple cases, while the Style object provides more flexibility and clarity for complex styling needs.
-
-## Examples
-
-### Style Object Example
+### 4. Using styled_pattern_match
 
 ```python
-from charstyle import RED, BG_BLACK, BOLD, Style
+from charstyle import styled, Style, styled_pattern_match
 
-# Create a reusable error style
-error_style = Style(color=RED, bg_color=BG_BLACK, style=BOLD)
-
-# Apply the style to different messages
-print(error_style("ERROR: File not found"))
-print(error_style("ERROR: Permission denied"))
+# Style using named regex groups
+pattern = r"(?P<timestamp>\d{4}-\d{2}-\d{2}) (?P<level>\w+): (?P<message>.*)"
+styles = {
+    "timestamp": Style.BRIGHT_BLACK,
+    "level": (Style.GREEN, Style.BOLD),
+    "message": Style.WHITE
+}
+print(styled_pattern_match("2023-05-15 INFO: Operation successful", pattern, styles))
 ```
 
-### Tuple Example
+## Real-World Examples
+
+### Error and Success Messages
 
 ```python
-from charstyle import RED, BOLD, colored, style_split
+from charstyle import styled, Style, styled_split
 
-# One-off styling with a tuple
-print(colored("Error message", style=(RED, BOLD)))
+# Function to create styled status messages
+def status_message(status, message):
+    status_line = styled_split("Database: Online", ":", (Style.BOLD, Style.WHITE), Style.GREEN)
+    return status_line
+```
 
-# Using tuples with style_split
-print(style_split("Status: Success", ":", (BOLD, RED), (GREEN, BOLD)))
+## Best Practices
+
+### 1. Create reusable style tuples for consistent styling
+
+```python
+from charstyle import styled, Style
+
+# Define reusable styles
+error_style = (Style.RED, Style.BOLD)
+warning_style = (Style.YELLOW, Style.ITALIC)
+success_style = (Style.GREEN, Style.BOLD)
+info_style = (Style.BLUE, Style.ITALIC)
+
+# Use them consistently throughout your application
+print(styled("Error: Connection failed", error_style))
+print(styled("Warning: Low disk space", warning_style))
+```
+
+### 2. Combine styling functions for complex output
+
+```python
+from charstyle import styled, Style, styled_split
+
+# Combine different styling approaches
+header = styled("SERVER STATUS", (Style.WHITE, Style.BG_BLUE, Style.BOLD))
+status_line = styled_split("Database: Online", ":", (Style.BOLD, Style.WHITE), Style.GREEN)
+
+print(f"{header}\n{status_line}")
+```
+
+## See Also
+
+- [Basic Usage](basic.md) - Introduction to basic styling
+- [Advanced Usage](advanced.md) - Complex styling techniques
+- [API Reference](../api/core.md) - Detailed API documentation

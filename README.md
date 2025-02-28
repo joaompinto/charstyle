@@ -1,8 +1,9 @@
-# Charstyle
+# charstyle
 
 [![PyPI version](https://badge.fury.io/py/charstyle.svg)](https://badge.fury.io/py/charstyle)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Versions](https://img.shields.io/pypi/pyversions/charstyle.svg)](https://pypi.org/project/charstyle/)
+[![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://joaompinto.github.io/charstyle/)
 
 A simple Python library for styling terminal text output using ANSI escape sequences.
 
@@ -25,152 +26,137 @@ A simple Python library for styling terminal text output using ANSI escape seque
 pip install charstyle
 ```
 
-For development and contributing to the project, see [README_DEVELOPERS.md](README_DEVELOPERS.md).
+For development and contributing to the project, see [README_DEVELOP.md](README_DEVELOP.md).
 
 ## Usage
 
-### Basic Usage with Functions
+### Basic Usage
 
 ```python
-# Import the convenience functions and some constants
-from charstyle import red, blue, green, yellow, bold, underline, italic
-from charstyle import BLUE, UNDERLINE
+# Import the styled function and Style
+from charstyle import styled, Style
 
 # Apply basic styles
-print(red("This is red text"))
-print(blue("This is blue text"))
-print(bold("This is bold text"))
-print(underline("This is underlined text"))
+print(styled("This is red text", Style.RED))
+print(styled("This is blue text", Style.BLUE))
+print(styled("This is bold text", Style.BOLD))
+print(styled("This is underlined text", Style.UNDERLINE))
 
-# Combining with function parameters
-print(red("Red text with underline", style=UNDERLINE))
-print(bold("Bold blue text", color=BLUE))
+# Combining styles with tuples
+print(styled("Red text with underline", (Style.RED, Style.UNDERLINE)))
+print(styled("Bold blue text", (Style.BLUE, Style.BOLD)))
 ```
 
-### Using Style Constants
+### Using Style Tuples
 
 ```python
-# Import style constants and colored function
-from charstyle import RED, BLUE, GREEN, YELLOW, BOLD, UNDERLINE, colored, BG_BLACK, BG_BLUE
+# Import styled function and Style
+from charstyle import styled, Style
 
-# Apply styles with constants
-print(colored("Red text", color=RED))
-print(colored("Blue text", color=BLUE))
-print(colored("Bold text", style=BOLD))
-print(colored("Underlined text", style=UNDERLINE))
+# Apply styles with Style enum values
+print(styled("Red text", Style.RED))
+print(styled("Blue text", Style.BLUE))
+print(styled("Bold text", Style.BOLD))
+print(styled("Underlined text", Style.UNDERLINE))
 
-# Mix styles with colored function
-print(colored("Bold yellow text", color=YELLOW, style=BOLD))
-print(colored("Underlined red text", color=RED, style=UNDERLINE))
+# Mix styles with tuples
+print(styled("Bold yellow text", (Style.YELLOW, Style.BOLD)))
+print(styled("Underlined red text", (Style.RED, Style.UNDERLINE)))
 
 # Custom color and background
-print(colored("Custom color and background", color=RED, bg_color=BLUE, style=BOLD))
+print(styled("Custom color and background", (Style.RED, Style.BG_BLUE, Style.BOLD)))
 ```
 
 ### Advanced Usage
 
 ```python
-from charstyle import YELLOW, BG_BLUE, BOLD, colored, Style, BRIGHT_RED, GREEN, ITALIC
+from charstyle import styled, Style
 
 # Combine foreground color, background color, and style
-print(colored("Custom styling", 
-              color=YELLOW, 
-              bg_color=BG_BLUE, 
-              style=BOLD))
+print(styled("Custom styling", (Style.YELLOW, Style.BG_BLUE, Style.BOLD)))
 
-# Create custom styles with Style class
-error_style = Style(color=BRIGHT_RED, style=BOLD)
-warning_style = Style(color=YELLOW, style=ITALIC)
-success_style = Style(color=GREEN)
+# Create predefined styles as tuples
+error_style = (Style.BRIGHT_RED, Style.BOLD)
+warning_style = (Style.YELLOW, Style.ITALIC)
+success_style = (Style.GREEN,)
 
 # Apply error style
 error_message = "Error: Something went wrong!"
-print(error_style(error_message))
+print(styled(error_message, error_style))
 
 # Apply warning style
-print(warning_style("Warning: This is a warning message"))
-
-# Apply success style
-print(success_style("Success: Operation completed successfully"))
+print(styled("Warning: This is a warning message", warning_style))
 ```
 
 ### Combining Multiple Styles
 
 ```python
-from charstyle import (
-    colored, bold, italic, RED, BOLD, ITALIC, UNDERLINE, 
-    Style, BRIGHT_GREEN, BG_BLACK
-)
+from charstyle import styled, Style
 
 # Method 1: Using the style parameter with a tuple of styles
-print(colored("Bold and Italic", 
-              style=(BOLD, ITALIC)))
+print(styled("Bold and Italic",
+              (Style.BOLD, Style.ITALIC)))
 
-# Method 2: Using the Style class
-bold_italic = Style(style=(BOLD, ITALIC))
-print(bold_italic("Bold and Italic (Style class)"))
+# Method 2: Using predefined style tuples
+bold_italic = (Style.BOLD, Style.ITALIC)
+print(styled("Bold and Italic (Style class)", bold_italic))
 
 # Method 3: Combining styles with colors
-print(colored("Bold red italic", 
-              color=RED, 
-              style=(BOLD, ITALIC)))
+print(styled("Bold red italic",
+              (Style.RED, Style.BOLD, Style.ITALIC)))
 
 # Fancy style with multiple attributes
-fancy_style = Style(
-    color=BRIGHT_GREEN,
-    bg_color=BG_BLACK,
-    style=(BOLD, UNDERLINE)
-)
-print(fancy_style("Bold underlined bright green text on black background"))
+fancy_style = (Style.BRIGHT_GREEN, Style.BG_BLACK, Style.BOLD, Style.UNDERLINE)
+print(styled("Bold underlined bright green text on black background", fancy_style))
 ```
 
-### Complex String Styling
+### Complex Styling Functions
+
+For more advanced styling needs, charstyle provides several complex styling functions:
 
 ```python
 from charstyle import (
-    style_split, style_complex, style_pattern_match, style_format,
-    BOLD, GREEN, RED, BLUE, YELLOW, ITALIC, red, green, blue, yellow, bold, italic
+    styled_split, styled_pattern, styled_pattern_match, styled_format,
+    Style
 )
 
-# Split by delimiter and style each part differently
-status = style_split("Status: Online", ":", BOLD, GREEN)
-print(status)  # "Status" is bold, "Online" is green
+# Style different parts of a string split by a delimiter
+status = styled_split("Status: Online", ":", Style.BOLD, Style.GREEN)
+# "Status" in bold, "Online" in green
 
-# Style text using regex pattern
-text = "The value is 42 and the status is OK"
-styled = style_complex(text, r"(value is \d+)|(status is \w+)", 
-                       RED, GREEN)
-print(styled)  # "value is 42" is red, "status is OK" is green
+# Style text by matching a regex pattern
+text = "The value is 42 and the status is active"
+styled = styled_pattern(text, r"(value is \d+)|(status is \w+)",
+                      Style.RED, Style.GREEN)
+# "value is 42" in red, "status is active" in green
 
-# Style using pattern matching with named groups
-log_line = "2023-02-27 15:30:45 [INFO] User authenticated"
-styled_log = style_pattern_match(
-    log_line,
-    r"(?P<date>\d{4}-\d{2}-\d{2}) (?P<time>\d{2}:\d{2}:\d{2}) \[(?P<level>\w+)\] (?P<message>.*)",
-    {"date": BLUE, "time": GREEN, "level": YELLOW, "message": ITALIC}
+# Style text using named regex groups
+log = "2023-04-15 [INFO] User logged in"
+styled_log = styled_pattern_match(
+    log,
+    r"(?P<date>\d{4}-\d{2}-\d{2}) (?P<level>\[\w+\]) (?P<msg>.*)",
+    {"date": Style.BLUE, "level": Style.GREEN, "msg": Style.YELLOW}
 )
-print(styled_log)
 
-# Style using format-style placeholders
-from charstyle import style_format, BOLD, RED
-template = "User {username} logged in from {ip}"
-formatted = style_format(template, 
-                         username=("admin", BOLD), 
-                         ip=("192.168.1.100", RED))
-print(formatted)  # "admin" is bold, "192.168.1.100" is red
+# Format-style placeholders with styles
+from charstyle import styled_format, Style
+template = "User {name} logged in from {ip}"
+formatted = styled_format(template,
+                        name=("admin", Style.GREEN),
+                        ip=("192.168.1.100", Style.RED))
 ```
 
 ### Terminal Icons
 
-Charstyle includes a collection of widely supported terminal icons that display correctly in most modern terminals:
+charstyle includes a collection of widely supported terminal icons that display correctly in most modern terminals:
 
 ```python
-from charstyle import Icon, colored, BOLD, RED, ITALIC
+from charstyle import Icon, styled, Style
 
 # Use individual icons
-print(f"{Icon.CHECK} {colored('Task completed', style=BOLD)}")
-print(f"{Icon.CROSS} {colored('Task failed', color=RED)}")
-print(f"{Icon.WARNING} {colored('Warning message', style=ITALIC)}")
+print(f"{Icon.CHECK} {styled('Task completed', Style.BOLD)}")
+print(f"{Icon.CROSS} {styled('Task failed', Style.RED)}")
+print(f"{Icon.WARNING} {styled('Warning message', Style.ITALIC)}")
 
 # Create a simple box
 print(f"{Icon.TOP_LEFT}{Icon.H_LINE * 10}{Icon.TOP_RIGHT}")
@@ -186,23 +172,51 @@ python -m charstyle --icons
 
 ## Available Styles
 
-### Text Colors
-- BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE
-- BRIGHT_BLACK, BRIGHT_RED, BRIGHT_GREEN, BRIGHT_YELLOW, BRIGHT_BLUE, BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE
+### Text Styles
+- Style.BOLD
+- Style.DIM
+- Style.ITALIC
+- Style.UNDERLINE
+- Style.BLINK
+- Style.REVERSE
+- Style.HIDDEN
+- Style.STRIKETHROUGH
+
+### Foreground Colors
+- Style.BLACK
+- Style.RED
+- Style.GREEN
+- Style.YELLOW
+- Style.BLUE
+- Style.MAGENTA
+- Style.CYAN
+- Style.WHITE
+- Style.BRIGHT_BLACK
+- Style.BRIGHT_RED
+- Style.BRIGHT_GREEN
+- Style.BRIGHT_YELLOW
+- Style.BRIGHT_BLUE
+- Style.BRIGHT_MAGENTA
+- Style.BRIGHT_CYAN
+- Style.BRIGHT_WHITE
 
 ### Background Colors
-- BG_BLACK, BG_RED, BG_GREEN, BG_YELLOW, BG_BLUE, BG_MAGENTA, BG_CYAN, BG_WHITE
-- BG_BRIGHT_BLACK, BG_BRIGHT_RED, BG_BRIGHT_GREEN, BG_BRIGHT_YELLOW, BG_BRIGHT_BLUE, BG_BRIGHT_MAGENTA, BG_BRIGHT_CYAN, BG_BRIGHT_WHITE
-
-### Text Styles
-- BOLD
-- DIM
-- ITALIC
-- UNDERLINE
-- BLINK
-- REVERSE
-- HIDDEN
-- STRIKETHROUGH
+- Style.BG_BLACK
+- Style.BG_RED
+- Style.BG_GREEN
+- Style.BG_YELLOW
+- Style.BG_BLUE
+- Style.BG_MAGENTA
+- Style.BG_CYAN
+- Style.BG_WHITE
+- Style.BG_BRIGHT_BLACK
+- Style.BG_BRIGHT_RED
+- Style.BG_BRIGHT_GREEN
+- Style.BG_BRIGHT_YELLOW
+- Style.BG_BRIGHT_BLUE
+- Style.BG_BRIGHT_MAGENTA
+- Style.BG_BRIGHT_CYAN
+- Style.BG_BRIGHT_WHITE
 
 ## Author
 
@@ -213,8 +227,18 @@ python -m charstyle --icons
 For developers who want to contribute to this project, please see:
 
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Guidelines for contributing to the project
-- [README_DEVELOPERS.md](README_DEVELOPERS.md) - Detailed guide for development workflows
+- [README_DEVELOP.md](README_DEVELOP.md) - Detailed guide for development workflows
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Documentation
+
+For more detailed documentation, visit our [GitHub Pages documentation site](https://joaompinto.github.io/charstyle/).
+
+The documentation includes:
+- Detailed usage guides
+- API reference
+- Examples and tutorials
+- Contributing guidelines

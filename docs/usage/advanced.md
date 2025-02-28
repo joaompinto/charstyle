@@ -1,184 +1,211 @@
 # Advanced Usage
 
-This page covers advanced usage of Charstyle for complex text styling.
+This page covers advanced usage of charstyle for complex text styling.
 
 ## Creating Reusable Styles
 
 ```python
-from charstyle import RED, GREEN, BLUE, BOLD, ITALIC, Style
+from charstyle import styled, Style
 
-# Create reusable styles
-error_style = Style(color=RED, style=BOLD)
-warning_style = Style(color=YELLOW, style=ITALIC)
-success_style = Style(color=GREEN)
+# Create reusable style tuples
+error_style = (Style.RED, Style.BOLD)
+warning_style = (Style.YELLOW, Style.ITALIC)
+success_style = (Style.GREEN,)
 
 # Apply styles to text
-print(error_style("Error: Operation failed"))
-print(warning_style("Warning: This operation might take a while"))
-print(success_style("Success: Operation completed"))
+print(styled("Error: Operation failed", error_style))
+print(styled("Warning: This operation might take a while", warning_style))
+print(styled("Success: Operation completed", success_style))
 ```
 
 ## Styling Parts of Text
 
-### Using style_split
+### Using styled_split
 
 Split a string by a delimiter and apply different styles to each part:
 
 ```python
-from charstyle import BOLD, GREEN, RED, style_split
+from charstyle import styled, Style, styled_split
 
 # Style a key-value pair with different styles
-print(style_split("Status: OK", ":", BOLD, GREEN))
-print(style_split("Error: File not found", ":", (RED, BOLD), RED))
+print(styled_split("Status: OK", ":", Style.BOLD, Style.GREEN))
+print(styled_split("Error: File not found", ":", (Style.RED, Style.BOLD), Style.RED))
+
+# For multiple delimiters, make sure the number of styles matches the number of parts
+print(styled_split("a,b,c", ",", Style.RED, Style.GREEN, Style.BLUE))
+
+# This would raise a ValueError because there are 3 parts but only 2 styles
+# print(styled_split("a,b,c", ",", Style.RED, Style.GREEN))
 ```
 
-### Using style_complex
+Note: The number of styles must match the number of parts after splitting the text by the delimiter. If there's a mismatch, a `ValueError` will be raised.
+
+### Using styled_pattern
 
 Style different parts of a string based on a regular expression pattern:
 
 ```python
-from charstyle import BLUE, GREEN, YELLOW, style_complex
+from charstyle import styled, Style, styled_pattern
 
-# Style with regular expression pattern
-print(
-    style_complex(
-        "Status: OK (processed)",
-        r"(: |\()",
-        BLUE,   # "Status"
-        GREEN,  # "OK "
-        YELLOW, # "processed)"
-    )
-)
+# Style a log message with timestamp and level
+log_message = "2023-05-15 10:30:45 [INFO] User logged in"
+pattern = r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) \[(\w+)\] (.*)"
+
+# Style each captured group
+print(styled_pattern(log_message, pattern, Style.BLUE, Style.YELLOW, Style.GREEN))
 ```
 
-### Using style_pattern_match
+### Using styled_pattern_match
 
 Style different parts of a string based on named capture groups in a regular expression:
 
 ```python
-from charstyle import RED, YELLOW, BOLD, style_pattern_match
+from charstyle import styled, Style, styled_pattern_match
 
-pattern = r"(?P<code>\d{3}) (?P<status>\w+) - (?P<message>.*)"
-style_map = {
-    "code": (RED, BOLD),
-    "status": RED,
-    "message": YELLOW,
+# Log entry styling
+pattern = r"(?P<timestamp>\d{2}:\d{2}:\d{2}) (?P<level>\w+): (?P<message>.*)"
+styles = {
+    "timestamp": Style.BRIGHT_BLACK,
+    "level": (Style.GREEN, Style.BOLD),
+    "message": Style.WHITE,
 }
-print(
-    style_pattern_match(
-        "404 NotFound - The requested resource does not exist", 
-        pattern, 
-        style_map
-    )
+
+styled_text = styled_pattern_match(
+    "14:25:36 INFO: User authentication successful",
+    pattern,
+    styles
 )
+print(styled_text)
 ```
 
-### Using style_format
+### Using styled_format
 
-Style different parts of a string based on format placeholders:
+Format a string with styled values:
 
 ```python
-from charstyle import BLUE, GREEN, RED, BOLD, style_format
+from charstyle import styled, Style, styled_format
 
 # Format with positional arguments
-print(style_format("{} = {}", ("username", BLUE), ("admin", GREEN)))
-
-# Format with keyword arguments
 print(
-    style_format(
-        "HTTP/{version} {code} {status}",
-        version=("1.1", BLUE),
-        code=("200", GREEN),
-        status=("OK", (GREEN, BOLD)),
+    styled_format(
+        "{} = {}",
+        ("username", Style.BLUE),
+        ("admin", Style.GREEN)
     )
 )
 ```
 
-## Creating Custom Styling Functions
+## Combining Different Techniques
 
-You can create your own styling functions for specific use cases:
-
-```python
-from charstyle import RED, GREEN, YELLOW, BOLD, colored
-
-def status_message(status, message):
-    """Format a status message with appropriate styling."""
-    if status == "error":
-        status_styled = colored("ERROR", color=RED, style=BOLD)
-    elif status == "warning":
-        status_styled = colored("WARNING", color=YELLOW, style=BOLD)
-    elif status == "success":
-        status_styled = colored("SUCCESS", color=GREEN, style=BOLD)
-    else:
-        status_styled = colored("INFO", color=BLUE, style=BOLD)
-    
-    return f"[{status_styled}] {message}"
-
-# Use the custom function
-print(status_message("error", "Failed to connect to the server"))
-print(status_message("warning", "Connection timeout, retrying..."))
-print(status_message("success", "Connected successfully"))
-```
-
-## Styling Tables
-
-Create styled tables for terminal output:
+You can combine different styling techniques for more complex output:
 
 ```python
-from charstyle import BLUE, GREEN, RED, YELLOW, BOLD, UNDERLINE, colored
+from charstyle import styled, Style, styled_pattern_match
 
-def print_table_row(columns, widths, styles=None):
-    """Print a styled table row."""
-    if styles is None:
-        styles = [None] * len(columns)
-    
-    row = []
-    for col, width, style in zip(columns, widths, styles):
-        text = str(col).ljust(width)
-        if style:
-            text = colored(text, **style)
-        row.append(text)
-    
-    print(" | ".join(row))
+# Style a log message with named groups
+log_message = "2023-05-15 10:30:45 [INFO] User logged in successfully from 192.168.1.1"
+pattern = r"(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) \[(?P<level>\w+)\] (?P<message>.*) from (?P<ip>\d+\.\d+\.\d+\.\d+)"
 
-def print_table_header(headers, widths):
-    """Print a styled table header."""
-    header_styles = [{"style": BOLD} for _ in headers]
-    print_table_row(headers, widths, header_styles)
-    
-    # Print separator
-    separator = []
-    for width in widths:
-        separator.append("-" * width)
-    print_table_row(separator, widths)
+styles = {
+    "timestamp": Style.BRIGHT_BLACK,
+    "level": (Style.GREEN, Style.BOLD),
+    "message": Style.WHITE,
+    "ip": (Style.CYAN, Style.ITALIC)
+}
 
-# Example usage
-headers = ["Name", "Status", "Memory", "CPU"]
-widths = [20, 10, 10, 10]
-
-print_table_header(headers, widths)
-
-# Print rows with different styles
-rows = [
-    ["server1.example.com", "Running", "2.1 GB", "45%"],
-    ["server2.example.com", "Stopped", "0.0 GB", "0%"],
-    ["server3.example.com", "Warning", "7.8 GB", "92%"]
-]
-
-styles = [
-    [None, {"color": GREEN}, None, None],
-    [None, {"color": RED}, None, None],
-    [None, {"color": YELLOW}, None, {"color": RED, "style": BOLD}]
-]
-
-for row, style in zip(rows, styles):
-    print_table_row(row, widths, style)
+styled_log = styled_pattern_match(log_message, pattern, styles)
+print(styled_log)
 ```
 
-## Next Steps
+## Practical Examples
 
-Now that you've learned about advanced styling techniques, you can explore:
+### Log Message Styling
 
-- [Styling Options](styling-options.md) - Understand when to use Style objects vs. tuples
-- [Complex Examples](../examples/complex.md) - See more complex styling examples
+```python
+from charstyle import styled, Style, styled_pattern_match
+
+# Sample log message
+log_message = "2023-04-15 12:34:56 [ERROR] Failed to connect to database: Connection refused"
+
+# Define a pattern to match log components
+pattern = r"(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) \[(?P<level>\w+)\] (?P<message>.*)"
+
+# Define styles for each component
+styles = {
+    "timestamp": Style.BLUE,
+    "level": (Style.RED, Style.BOLD),
+    "message": Style.WHITE
+}
+
+# Apply styling
+styled_log = styled_pattern_match(log_message, pattern, styles)
+print(styled_log)
+```
+
+### Configuration File Styling
+
+```python
+from charstyle import styled, Style, styled_pattern
+
+# Sample configuration line
+config_line = "database.host = localhost # Primary database server"
+
+# Style different parts of the configuration
+styled_config = styled_pattern(
+    config_line,
+    r"(\.)|( = )|(#.*)",
+    (Style.BLUE, Style.BOLD),  # "database"
+    Style.CYAN,              # "host"
+    Style.GREEN,             # "localhost"
+    (Style.YELLOW, Style.ITALIC)  # "# Primary database server"
+)
+print(styled_config)
+```
+
+### Command Output Styling
+
+```python
+from charstyle import styled, Style, styled_split, styled_pattern
+
+# Sample command output
+command_output = "Total: 42 files, 156 directories, 8.5 MB"
+
+# Style using split
+print(styled_split(command_output, ":", (Style.BOLD, Style.BLUE), Style.GREEN))
+
+# Style using pattern
+print(
+    styled_pattern(
+        command_output,
+        r"(\d+)|(\d+\.\d+)",
+        Style.WHITE,  # "Total"
+        Style.YELLOW, # "42"
+        Style.WHITE,  # " files, "
+        Style.YELLOW, # "156"
+        Style.WHITE,  # " directories, "
+        Style.YELLOW, # "8.5"
+        Style.WHITE   # " MB"
+    )
+)
+```
+
+### Command Output Styling
+
+Style the output of a command to highlight important information:
+
+```python
+from charstyle import styled, Style, styled_split, styled_pattern
+
+# Sample command output
+command_output = "Status: Running\nUptime: 3d 4h 12m\nCPU: 45%\nMemory: 1.2GB/8GB"
+
+# Style each line differently
+for line in command_output.split("\n"):
+    print(styled_split(line, ":", (Style.BOLD, Style.BLUE), Style.GREEN))
+```
+
+## See Also
+
+- [Basic Usage](basic.md) - Introduction to basic styling
+- [Styling Options](styling-options.md) - All available styles and colors
 - [API Reference](../api/complex-styling.md) - Detailed API documentation for complex styling functions

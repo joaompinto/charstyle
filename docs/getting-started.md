@@ -1,10 +1,10 @@
-# Getting Started with Charstyle
+# Getting Started with charstyle
 
-This guide will help you get started with Charstyle, a Python library for styling terminal text.
+This guide will help you get started with charstyle, a Python library for styling terminal text.
 
 ## Installation
 
-Install Charstyle using pip:
+Install charstyle using pip:
 
 ```bash
 pip install charstyle
@@ -15,31 +15,49 @@ pip install charstyle
 Here's a simple example to get you started:
 
 ```python
-from charstyle import RED, GREEN, BLUE, BOLD, colored
+from charstyle import styled, Style
 
 # Basic color
-print(colored("This is red text", color=RED))
+print(styled("This is red text", Style.RED))
 
 # Color with style
-print(colored("This is bold blue text", color=BLUE, style=BOLD))
+print(styled("This is bold blue text", (Style.BLUE, Style.BOLD)))
 
-# Using convenience functions
-from charstyle import red, blue, bold
-
-print(red("This is red text"))
-print(bold("This is bold text"))
-print(blue("This is blue text", style=BOLD))  # Can combine functions with styles
+# Multiple styles
+print(styled("This is bold green text on yellow background",
+             (Style.GREEN, Style.BOLD, Style.BG_YELLOW)))
 ```
 
 ## Next Steps
 
-Now that you've seen the basics, you can explore more advanced features:
+Now that you have charstyle installed and know the basics, you can:
 
-- [Basic Usage Guide](usage/basic.md) - Learn about all the basic styling options
-- [Advanced Usage](usage/advanced.md) - Discover complex styling techniques
-- [Styling Options](usage/styling-options.md) - Understand when to use Style objects vs. tuples
+1. Learn more about [basic usage](usage/basic.md)
+2. Explore [advanced styling techniques](usage/advanced.md)
+3. Check out the [API reference](api/core.md)
+
+## Example: Styled Output
+
+Here's a more complete example showing how to create styled terminal output:
+
+```python
+from charstyle import styled, Style
+
+# Define some reusable styles
+header_style = (Style.BLUE, Style.BOLD)
+success_style = (Style.GREEN, Style.BOLD)
+error_style = (Style.RED, Style.BOLD)
+warning_style = (Style.YELLOW, Style.ITALIC)
+
+# Use the styles
+print(styled("APPLICATION STATUS", header_style))
+print(styled("✓ Database connection: ", success_style) + "Connected")
+print(styled("✓ Configuration: ", success_style) + "Loaded")
+print(styled("⚠ Disk space: ", warning_style) + "Running low")
+print(styled("✗ External API: ", error_style) + "Unavailable")
+```
 
 ## Requirements
 
-- Python 3.11 or higher (required for StrEnum support)
+- Python 3.11 or higher
 - A terminal that supports ANSI color codes

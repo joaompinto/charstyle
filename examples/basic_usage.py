@@ -3,84 +3,76 @@
 Example script demonstrating the basic usage of the charstyle library.
 """
 
-import charstyle
-from charstyle import BackgroundColor, ForegroundColor, Style, TextStyle, colored, supports_color
+from charstyle import Style, styled, supports_color
 
 
-def main():
+def main() -> None:
     """
-    Demonstrate basic charstyle features using the enum-based approach.
+    Demonstrate basic charstyle features.
     """
     # Check if terminal supports colors
     if not supports_color():
         print("Your terminal does not support colors.")
         return
 
-    print("\n=== Basic Colors ===")
-    # Using convenience functions
-    print(charstyle.red("Red text"))
-    print(charstyle.green("Green text"))
-    print(charstyle.blue("Blue text"))
+    print("\n=== Basic Color Examples ===")
 
-    # Using direct enum values with colored()
-    print(colored("Yellow text", color=ForegroundColor.YELLOW))
-    print(colored("Magenta text", color=ForegroundColor.MAGENTA))
-    print(colored("Cyan text", color=ForegroundColor.CYAN))
+    # Using color constants directly
+    print(styled("This is red text", Style.RED))
+    print(styled("This is green text", Style.GREEN))
+    print(styled("This is blue text", Style.BLUE))
+    print(styled("This is cyan text", Style.CYAN))
 
-    print("\n=== Bright Colors ===")
-    print(colored("Bright Red", color=ForegroundColor.BRIGHT_RED))
-    print(colored("Bright Green", color=ForegroundColor.BRIGHT_GREEN))
-    print(colored("Bright Blue", color=ForegroundColor.BRIGHT_BLUE))
+    # Using text style constants
+    print(styled("This is bold text", Style.BOLD))
+    print(styled("This is italic text", Style.ITALIC))
+    print(styled("This is underlined text", Style.UNDERLINE))
+    print(styled("This is strikethrough text", Style.STRIKE))
 
-    print("\n=== Text Styles ===")
-    # Using convenience functions
-    print(charstyle.bold("Bold text"))
-    print(charstyle.italic("Italic text"))
-    print(charstyle.underline("Underlined text"))
+    # Combining color and style with tuples
+    print(styled("This is bold red text", (Style.RED, Style.BOLD)))
+    print(styled("This is italic blue text", (Style.BLUE, Style.ITALIC)))
 
-    # Using direct enum values
-    print(colored("Dim text", style=TextStyle.DIM))
-    print(colored("Reversed text", style=TextStyle.REVERSE))
-    print(colored("Strikethrough text", style=TextStyle.STRIKE))
+    # Using multiple styles with tuple
+    print(styled("This is bold and underlined text", (Style.BOLD, Style.UNDERLINE)))
 
-    print("\n=== Background Colors ===")
-    print(colored("Red background", bg_color=BackgroundColor.RED))
-    print(colored("Green background", bg_color=BackgroundColor.GREEN))
-    print(colored("Blue background", bg_color=BackgroundColor.BLUE))
-    print(colored("Yellow background", bg_color=BackgroundColor.YELLOW))
+    print("\n=== Predefined Style Examples ===")
 
-    print("\n=== Combining Styles ===")
-    # Combining styles and colors with colored()
-    print(colored("Bold red text", color=ForegroundColor.RED, style=TextStyle.BOLD))
+    # Create predefined styles as tuples
+    error_style = (Style.BRIGHT_RED, Style.BOLD)
+    warning_style = (Style.YELLOW, Style.ITALIC)
+    success_style = (Style.GREEN, Style.BOLD)
 
-    # Combining directly with colored()
-    print(colored("Bold blue text", color=ForegroundColor.BLUE, style=TextStyle.BOLD))
+    # Apply predefined styles
+    print(styled("This is an error message", error_style))
+    print(styled("This is a warning message", warning_style))
+    print(styled("This is a success message", success_style))
 
-    # Using multiple styles with a tuple
-    print(colored("Bold and italic text", style=(TextStyle.BOLD, TextStyle.ITALIC)))
+    print("\n=== Background Color Examples ===")
 
-    # Text and background colors
+    # Using background colors
+    print(styled("Text with red background", Style.BG_RED))
+    print(styled("Text with green background", Style.BG_GREEN))
+
+    # Combining foreground and background colors
+    print(styled("White text on blue background", (Style.WHITE, Style.BG_BLUE)))
+    print(styled("Black text on bright yellow background", (Style.BLACK, Style.BG_BRIGHT_YELLOW)))
+
+    # Complex styling
     print(
-        colored(
-            "White text on blue background",
-            color=ForegroundColor.WHITE,
-            bg_color=BackgroundColor.BLUE,
+        styled(
+            "Bold italic text with yellow foreground and blue background",
+            (Style.BOLD, Style.ITALIC, Style.YELLOW, Style.BG_BLUE),
         )
     )
 
-    print("\n=== Custom Styles ===")
-    # Creating reusable style objects
-    error_style = Style(color=ForegroundColor.BRIGHT_RED, style=TextStyle.BOLD)
-
-    warning_style = Style(
-        color=ForegroundColor.YELLOW, bg_color=BackgroundColor.BLACK, style=TextStyle.BOLD
+    # Alternative complex styling with good contrast
+    print(
+        styled(
+            "Bold italic text with white on red background",
+            (Style.BOLD, Style.ITALIC, Style.WHITE, Style.BG_RED),
+        )
     )
-
-    success_style = Style(color=ForegroundColor.GREEN, style=TextStyle.BOLD)
-
-    print(error_style("ERROR: Operation failed!"))
-    print(warning_style("WARNING: Proceed with caution!"))
-    print(success_style("SUCCESS: Operation completed!"))
 
 
 if __name__ == "__main__":

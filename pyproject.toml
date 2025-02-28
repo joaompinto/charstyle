@@ -36,6 +36,7 @@ dependencies = [
     "coverage>=7.6.12",
     "mypy>=1.15.0",
     "pdoc>=15.0.1",
+    "pre-commit>=3.5.0",
 ]
 
 [tool.hatch.envs.default.scripts]
@@ -62,6 +63,10 @@ publish-test = "hatch publish -r test"
 # Combined tasks
 check-all = "format-check && lint-check && test"
 pre-commit = "format && lint && test"
+
+# Pre-commit
+pre-commit-install = "pre-commit install"
+pre-commit-run = "pre-commit run --all-files"
 
 # Documentation
 docs = "pdoc --html --output-dir docs/ charstyle"

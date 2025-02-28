@@ -1,6 +1,6 @@
-site_name: Charstyle Documentation
-site_description: Documentation for the charstyle Python library
-site_author: Charstyle Team
+site_name: charstyle Documentation
+site_description: A Python library for styling terminal text
+site_author: charstyle Team
 
 theme:
   name: material

@@ -1,6 +1,6 @@
-# Contributing to Charstyle
+# Contributing to charstyle
 
-Thank you for your interest in contributing to Charstyle! This document provides guidelines and instructions for contributing to the project.
+Thank you for your interest in contributing to charstyle! This document provides guidelines and instructions for contributing to the project.
 
 ## Development Setup
 
@@ -93,4 +93,4 @@ When contributing code, please follow these guidelines:
 
 ## License
 
-By contributing to Charstyle, you agree that your contributions will be licensed under the project's license.
+By contributing to charstyle, you agree that your contributions will be licensed under the project's license.

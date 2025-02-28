@@ -5,65 +5,67 @@ This demonstrates how to use terminal icons for status indicators, progress bars
 and simple UI elements.
 """
 
-from charstyle import Icon, blue, bold, green, red, yellow
+from charstyle import (
+    Icon,
+    Style,
+    styled,
+    supports_color,
+)
 
 
-def main():
-    """Main demo function."""
+def main() -> None:
+    """Main demo function for charstyle icons."""
+    # Check if terminal supports colors
+    if not supports_color():
+        print("Your terminal doesn't support colors. Examples may not display correctly.")
+        return
+
     print("\n=== charstyle Icons Demo ===\n")
 
     # Status indicators
-    print(bold("Status Indicators:"))
-    print(f"{green(Icon.CHECK)} {bold('Success:')} Operation completed")
-    print(f"{red(Icon.CROSS)} {bold('Error:')} File not found")
-    print(f"{yellow(Icon.WARNING)} {bold('Warning:')} Disk space is low")
-    print(f"{blue(Icon.INFO)} {bold('Info:')} System is running normally")
-    print()
-
-    # Progress indicator
-    print(bold("Progress Bar:"))
-    progress = 7  # Out of 10
-    bar = f"{Icon.BLOCK * progress}{Icon.LIGHT_SHADE * (10 - progress)}"
-    print(f"Loading: [{green(bar)}] {progress * 10}%")
-    print()
-
-    # Simple box drawing
-    print(bold("Box Drawing:"))
-    title = "WELCOME"
-    padding = 2
-    width = len(title) + padding * 2
-
-    print(f"{Icon.TOP_LEFT}{Icon.H_LINE * width}{Icon.TOP_RIGHT}")
-    print(f"{Icon.V_LINE}{' ' * padding}{title}{' ' * padding}{Icon.V_LINE}")
-    print(f"{Icon.BOTTOM_LEFT}{Icon.H_LINE * width}{Icon.BOTTOM_RIGHT}")
-    print()
-
-    # Menu example
-    print(bold("Menu Example:"))
-    print(f"{Icon.CIRCLE} {bold('Menu Item 1')}")
-    print(f"{Icon.CIRCLE} {bold('Menu Item 2')}")
-    print(f"{Icon.TRIANGLE} {bold(green('Selected Item'))}")
-    print(f"{Icon.CIRCLE} {bold('Menu Item 4')}")
-    print()
-
-    # Table
-    print(bold("Simple Table:"))
-    print(f"{Icon.TOP_LEFT}{Icon.H_LINE * 12}{Icon.TOP_RIGHT}{Icon.H_LINE * 10}{Icon.TOP_RIGHT}")
-    print(f"{Icon.V_LINE} {bold('Name')}      {Icon.V_LINE} {bold('Value')}  {Icon.V_LINE}")
-    print(f"{Icon.V_LINE} Item 1     {Icon.V_LINE} 42      {Icon.V_LINE}")
-    print(f"{Icon.V_LINE} Item 2     {Icon.V_LINE} 73      {Icon.V_LINE}")
+    print(styled("Status Indicators:", Style.BOLD))
+    print(f"{styled(Icon.CHECK, Style.GREEN)} {styled('Success:', Style.BOLD)} Operation completed")
+    print(f"{styled(Icon.CROSS, Style.RED)} {styled('Error:', Style.BOLD)} File not found")
     print(
-        f"{Icon.BOTTOM_LEFT}{Icon.H_LINE * 12}{Icon.BOTTOM_RIGHT}{Icon.H_LINE * 10}{Icon.BOTTOM_RIGHT}"
+        f"{styled(Icon.WARNING, Style.YELLOW)} {styled('Warning:', Style.BOLD)} Disk space is low"
     )
+    print(
+        f"{styled(Icon.INFO, Style.BLUE)} {styled('Info:', Style.BOLD)} System is running normally"
+    )
+    print()
 
-    # Mood indicators
-    print("\n" + bold("Mood Indicators:"))
-    print(f"{Icon.SMILE} {bold('Happy')}")
-    print(f"{Icon.FROWN} {bold('Sad')}")
-    print(f"{Icon.THUMBS_UP} {bold('Approved')}")
-    print(f"{Icon.THUMBS_DOWN} {bold('Rejected')}")
-    print(f"{Icon.FIRE} {red(bold('Hot'))}")
-    print(f"{Icon.CLAP} {yellow(bold('Congratulations'))}")
+    # Progress bar with icons
+    progress = 7
+    bar = Icon.BLOCK * progress + Icon.LIGHT_SHADE * (10 - progress)
+    print(styled("Progress Bar:", Style.BOLD))
+    print(f"Loading: [{styled(bar, Style.GREEN)}] {progress * 10}%")
+    print()
+
+    # Box drawing with icons
+    print(styled("Box Drawing:", Style.BOLD))
+    print(f"{Icon.TOP_LEFT}{Icon.H_LINE * 20}{Icon.TOP_RIGHT}")
+    print(f"{Icon.V_LINE} {styled('Menu', Style.BOLD)}               {Icon.V_LINE}")
+    print(f"{Icon.T_RIGHT}{Icon.H_LINE * 20}{Icon.T_LEFT}")
+    print(f"{Icon.V_LINE} {styled('1.', Style.GREEN)} New File        {Icon.V_LINE}")
+    print(f"{Icon.V_LINE} {styled('2.', Style.GREEN)} Open File       {Icon.V_LINE}")
+    print(f"{Icon.V_LINE} {styled('3.', Style.GREEN)} Save            {Icon.V_LINE}")
+    print(f"{Icon.V_LINE} {styled('4.', Style.GREEN)} Exit            {Icon.V_LINE}")
+    print(f"{Icon.BOTTOM_LEFT}{Icon.H_LINE * 20}{Icon.BOTTOM_RIGHT}")
+    print()
+
+    # Bullet points with icons
+    print(styled("Bullet Points:", Style.BOLD))
+    print(f"{Icon.CIRCLE} First item")
+    print(f"{Icon.CIRCLE} Second item")
+    print(f"{Icon.CIRCLE} Third item")
+    print()
+
+    # Arrows and directional indicators
+    print(styled("Arrows:", Style.BOLD))
+    print(f"{Icon.ARROW_RIGHT} Next")
+    print(f"{Icon.ARROW_LEFT} Previous")
+    print(f"{Icon.ARROW_UP} Up")
+    print(f"{Icon.ARROW_DOWN} Down")
     print()
 
 

@@ -1,6 +1,6 @@
 # Basic Examples
 
-This page provides basic examples of using Charstyle for styling terminal text.
+This page provides basic examples of using charstyle for styling terminal text.
 
 ## Basic Text Coloring
 
@@ -174,7 +174,7 @@ import time
 
 def log(level, message):
     timestamp = time.strftime("%H:%M:%S")
-    
+
     if level == "ERROR":
         level_styled = colored(level, color=RED, style=BOLD)
     elif level == "WARNING":
@@ -185,7 +185,7 @@ def log(level, message):
         level_styled = colored(level, color=BLUE)
     else:
         level_styled = level
-    
+
     print(f"[{timestamp}] {level_styled}: {message}")
 
 # Example usage
@@ -203,4 +203,3 @@ Output:
 [21:45:30] WARNING: Configuration file not found, using defaults
 [21:45:30] ERROR: Failed to connect to database
 [21:45:30] INFO: Retrying connection in 5 seconds
-```

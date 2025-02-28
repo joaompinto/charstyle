@@ -1,147 +1,154 @@
-#!/usr/bin/env python3
 """
-Unit tests for the complex styling functions in charstyle.
+Tests for the complex styling functionality in charstyle.
 """
 
+import os
 import unittest
+from unittest.mock import patch
 
-from charstyle import (
-    BLUE,
-    BOLD,
-    GREEN,
-    ITALIC,
-    RED,
-    YELLOW,
+from charstyle import Style
+from charstyle.pattern_style import (
+    styled_format,
+    styled_pattern,
+    styled_pattern_match,
+    styled_split,
 )
-from charstyle.complex_style import style_complex, style_format, style_pattern_match, style_split
-
-# NOTE: The order of ANSI style codes is important in these tests.
-# The implementation combines styles in the following order:
-# 1. Style codes (BOLD, ITALIC, etc.) are applied first
-# 2. Foreground color codes are applied next
-# 3. Background color codes are applied last
 
 
-class TestComplexStyling(unittest.TestCase):
-    """Test cases for complex styling functions."""
+class TestComplexStyle(unittest.TestCase):
+    """Test cases for the complex styling functionality."""
 
-    def test_style_split(self):
-        """Test style_split function."""
-        # Basic split with two parts
-        result = style_split("key:value", ":", BOLD, GREEN)
-        # The result format should be: "<bold>key</bold>:<green>value</green>"
-        self.assertIn("key", result)
-        self.assertIn("value", result)
-        self.assertIn("\033[1m", result)  # Bold code
-        self.assertIn("\033[32m", result)  # Green code
+    def setUp(self):
+        """Set up the test environment."""
+        # Force color support for testing
+        os.environ["FORCE_COLOR"] = "1"
+        # Ensure sys.stdout.isatty() returns True
+        self.isatty_patcher = patch("sys.stdout.isatty", return_value=True)
+        self.isatty_mock = self.isatty_patcher.start()
 
-        # Split with more parts than styles
-        result = style_split("a:b:c", ":", RED, BLUE)
-        # The result should contain styled a and b, but c is unstyled
-        self.assertIn("\033[31m", result)  # Red code
-        self.assertIn("\033[34m", result)  # Blue code
-        self.assertIn("a", result)
-        self.assertIn("b", result)
-        self.assertIn("c", result)
+    def tearDown(self):
+        """Clean up the test environment."""
+        # Remove the environment variable
+        if "FORCE_COLOR" in os.environ:
+            del os.environ["FORCE_COLOR"]
+        # Stop the patch
+        self.isatty_patcher.stop()
 
-        # Split with more styles than parts
-        result = style_split("a:b", ":", RED, GREEN, BLUE)
-        # The result should have styled a and b, but the third style isn't used
-        self.assertIn("\033[31m", result)  # Red code
-        self.assertIn("\033[32m", result)  # Green code
-        self.assertIn("a", result)
-        self.assertIn("b", result)
+    def test_styled_split(self):
+        """Test the styled_split function."""
+        # Test with a simple delimiter
+        result = styled_split("Hello World", " ", Style.RED, Style.GREEN)
+        expected = "\033[31mHello\033[0m \033[32mWorld\033[0m"
+        self.assertEqual(result, expected)
 
-    def test_style_complex(self):
-        """Test style_complex function."""
-        # Basic regex split - splitting on the words in the middle
-        text = "The value is 42 and status is OK"
-        pattern = r"(value is \d+)|(status is \w+)"
-        result = style_complex(text, pattern, RED, GREEN)
+        # Test with a delimiter that appears multiple times
+        result = styled_split("a,b,c", ",", Style.RED, Style.GREEN, Style.BLUE)
+        expected = "\033[31ma\033[0m,\033[32mb\033[0m,\033[34mc\033[0m"
+        self.assertEqual(result, expected)
 
-        # Check the text is present and styling is applied
-        self.assertIn("The ", result)
-        self.assertIn("value is 42", result)
-        self.assertIn(" and ", result)
-        self.assertIn("status is OK", result)
-        self.assertIn("\033[31m", result)  # Red code
-        self.assertIn("\033[32m", result)  # Green code
+        # Test with a delimiter that doesn't appear
+        result = styled_split("Hello", ",", Style.RED)
+        expected = "\033[31mHello\033[0m"
+        self.assertEqual(result, expected)
 
-        # Simple case with numbers - styling the digits in the middle
-        text = "test 123 test"
-        pattern = r"(\d+)"
-        result = style_complex(text, pattern, BOLD)
+        # Test with an empty string
+        result = styled_split("", ",", Style.RED)
+        expected = ""
+        self.assertEqual(result, expected)
 
-        self.assertIn("test ", result)
-        self.assertIn("123", result)
-        self.assertIn(" test", result)
-        self.assertIn("\033[1m", result)  # Bold code
-
-    def test_style_pattern_match(self):
-        """Test style_pattern_match function."""
-        # Test with named groups
-        log_line = "2023-02-27 15:30:45 [INFO] User authenticated"
-        pattern = r"(?P<date>\d{4}-\d{2}-\d{2}) (?P<time>\d{2}:\d{2}:\d{2}) \[(?P<level>\w+)\] (?P<message>.*)"
-        styles = {"date": BLUE, "time": GREEN, "level": YELLOW, "message": ITALIC}
-
-        result = style_pattern_match(log_line, pattern, styles)
-
-        # Check content and style codes
-        self.assertIn("2023-02-27", result)
-        self.assertIn("15:30:45", result)
-        self.assertIn("INFO", result)
-        self.assertIn("User authenticated", result)
-        self.assertIn("\033[34m", result)  # Blue code for date
-        self.assertIn("\033[32m", result)  # Green code for time
-        self.assertIn("\033[33m", result)  # Yellow code for level
-        self.assertIn("\033[3m", result)  # Italic code for message
-
-        # Test with no match
-        result = style_pattern_match("No match here", pattern, styles)
-        self.assertEqual(result, "No match here")
-
-        # Test with only some groups styled
-        partial_styles = {"date": BLUE, "level": YELLOW}
-        result = style_pattern_match(log_line, pattern, partial_styles)
-        self.assertIn("2023-02-27", result)
-        self.assertIn("15:30:45", result)
-        self.assertIn("INFO", result)
-        self.assertIn("User authenticated", result)
-        self.assertIn("\033[34m", result)  # Blue code for date
-        self.assertIn("\033[33m", result)  # Yellow code for level
-        self.assertNotIn("\033[32m", result)  # No green code for time
-        self.assertNotIn("\033[3m", result)  # No italic code for message
-
-    def test_style_format(self):
-        """Test style_format function."""
-        # Basic format with styles
-        template = "User {username} logged in from {ip}"
-
-        # Use the correct parameter format: keyword args with (text, style) tuples
-        result = style_format(template, username=("admin", BOLD), ip=("192.168.1.100", RED))
-
-        self.assertIn("\033[1madmin\033[0m", result)
-        self.assertIn("\033[31m192.168.1.100\033[0m", result)
-        self.assertIn("User ", result)
-        self.assertIn(" logged in from ", result)
-
-        # Format with some unstylized values
-        template = "{a} {b} {c}"
-        result = style_format(
-            template, a=("1", BOLD), b="2", c=("3", GREEN)  # No style, just a plain string
+        # Test with multiple styles
+        result = styled_split(
+            "Hello World", " ", (Style.BOLD, Style.RED), (Style.ITALIC, Style.GREEN)
         )
+        expected = "\033[1;31mHello\033[0m \033[3;32mWorld\033[0m"
+        self.assertEqual(result, expected)
 
-        self.assertIn("\033[1m1\033[0m", result)
-        self.assertIn("2", result)  # Plain text
-        self.assertIn("\033[32m3\033[0m", result)
+        # Test with mismatched styles and parts
+        with self.assertRaises(ValueError):
+            styled_split("a,b,c", ",", Style.RED, Style.GREEN)
 
-        # Test with positional args
-        template = "{} {} {}"
-        result = style_format(template, ("A", RED), "B", ("C", BLUE))
+    def test_styled_pattern(self):
+        """Test the styled_pattern function."""
+        # Test with a simple pattern
+        result = styled_pattern("Hello World", r"(World)", Style.RED)
+        expected = "Hello \033[31mWorld\033[0m"
+        self.assertEqual(result, expected)
 
-        self.assertIn("\033[31mA\033[0m", result)
-        self.assertIn("B", result)  # Plain text
-        self.assertIn("\033[34mC\033[0m", result)
+        # Test with a pattern that doesn't match
+        result = styled_pattern("Hello World", r"(Universe)", Style.RED)
+        expected = "Hello World"
+        self.assertEqual(result, expected)
+
+        # Test with a pattern that matches multiple times
+        result = styled_pattern("Hello Hello World", r"(Hello)", Style.RED)
+        expected = "\033[31mHello\033[0m \033[31mHello\033[0m World"
+        self.assertEqual(result, expected)
+
+        # Test with multiple styles
+        result = styled_pattern("Hello World", r"(World)", (Style.BOLD, Style.RED))
+        expected = "Hello \033[1;31mWorld\033[0m"
+        self.assertEqual(result, expected)
+
+    def test_styled_pattern_match(self):
+        """Test the styled_pattern_match function."""
+        # Test with named groups
+        pattern = r"(?P<salutation>Hello) (?P<name>World)"
+        style_map = {"salutation": Style.RED, "name": Style.GREEN}
+        result = styled_pattern_match("Hello World", pattern, style_map)
+        expected = "\033[31mHello\033[0m \033[32mWorld\033[0m"
+        self.assertEqual(result, expected)
+
+        # Test with pattern that doesn't match
+        pattern = r"(?P<salutation>Goodbye) (?P<name>World)"
+        style_map = {"salutation": Style.RED, "name": Style.GREEN}
+        result = styled_pattern_match("Hello World", pattern, style_map)
+        expected = "Hello World"
+        self.assertEqual(result, expected)
+
+        # Test with pattern that has more groups than styles
+        pattern = r"(?P<salutation>Hello) (?P<name>World)"
+        style_map = {"salutation": Style.RED}
+        result = styled_pattern_match("Hello World", pattern, style_map)
+        expected = "\033[31mHello\033[0m World"
+        self.assertEqual(result, expected)
+
+        # Test with multiple styles per group
+        pattern = r"(?P<salutation>Hello) (?P<name>World)"
+        style_map = {"salutation": (Style.BOLD, Style.RED), "name": (Style.ITALIC, Style.GREEN)}
+        result = styled_pattern_match("Hello World", pattern, style_map)
+        expected = "\033[1;31mHello\033[0m \033[3;32mWorld\033[0m"
+        self.assertEqual(result, expected)
+
+    def test_styled_format(self):
+        """Test the styled_format function."""
+        # Test with positional arguments
+        result = styled_format("{} {}", ("Hello", Style.RED), ("World", Style.GREEN))
+        expected = "\033[31mHello\033[0m \033[32mWorld\033[0m"
+        self.assertEqual(result, expected)
+
+        # Test with keyword arguments
+        result = styled_format(
+            "{greeting} {name}", greeting=("Hello", Style.RED), name=("World", Style.GREEN)
+        )
+        expected = "\033[31mHello\033[0m \033[32mWorld\033[0m"
+        self.assertEqual(result, expected)
+
+        # Test with mixed arguments
+        result = styled_format("{0} {name}", ("Hello", Style.RED), name=("World", Style.GREEN))
+        expected = "\033[31mHello\033[0m \033[32mWorld\033[0m"
+        self.assertEqual(result, expected)
+
+        # Test with multiple styles per argument
+        result = styled_format(
+            "{} {}", ("Hello", (Style.BOLD, Style.RED)), ("World", (Style.ITALIC, Style.GREEN))
+        )
+        expected = "\033[1;31mHello\033[0m \033[3;32mWorld\033[0m"
+        self.assertEqual(result, expected)
+
+        # Test with a colon in the format string
+        result = styled_format("{}:{}", ("Hello", Style.RED), ("World", Style.GREEN))
+        expected = "\033[31mHello\033[0m:\033[32mWorld\033[0m"
+        self.assertEqual(result, expected)
 
 
 if __name__ == "__main__":

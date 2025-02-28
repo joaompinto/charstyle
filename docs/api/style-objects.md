@@ -1,101 +1,105 @@
-# Style Objects API
+# Style Tuples API
 
-This page documents the `Style` class and related functionality in the Charstyle library.
+This page documents how to use style tuples in the charstyle library.
 
-## Style Class
+## Style Tuples
 
-The `Style` class allows you to create reusable style combinations with explicit control over colors and text styles.
+Style tuples allow you to create reusable style combinations by grouping multiple style enum values.
 
-### Constructor
+### Creating Style Tuples
 
 ```python
-Style(color=None, bg_color=None, style=None)
+# Basic syntax
+style_tuple = (Style.RED, Style.BOLD)
 ```
 
-**Parameters:**
+**Components:**
 
-- `color` (ForegroundColor | None): The text color to apply
-- `bg_color` (BackgroundColor | None): The background color to apply
-- `style` (TextStyle | tuple[TextStyle, ...] | None): The text style(s) to apply
+- Style enum values from the `Style` enum
+- Can include foreground colors, background colors, and text styles in any combination
+
+## Available Styles
+
+For a complete list of all available style enum values that can be used in style tuples, see the [Styling Options](../usage/styling-options.md#available-styles) documentation.
 
 ### Usage
 
 ```python
-from charstyle import RED, BG_BLACK, BOLD, Style
+from charstyle import styled, Style
 
-# Create a style
-error_style = Style(color=RED, bg_color=BG_BLACK, style=BOLD)
+# Create a style tuple
+error_style = (Style.RED, Style.BG_BLACK, Style.BOLD)
 
 # Apply the style to text
-styled_text = error_style("Error message")
+styled_text = styled("Error message", error_style)
 print(styled_text)
 ```
 
-### Methods
+## Common Style Tuple Patterns
 
-#### `__call__(text: str) -> str`
-
-Applies the style to the given text.
-
-**Parameters:**
-- `text` (str): The text to style
-
-**Returns:**
-- `str`: The styled text
-
-## Style Constants
-
-Charstyle provides various style constants through enums:
-
-### TextStyle
-
-Text style modifiers available as constants:
-
-- `NORMAL` - Normal text (reset)
-- `BOLD` - Bold text
-- `DIM` - Dimmed text
-- `ITALIC` - Italic text
-- `UNDERLINE` - Underlined text
-- `BLINK` - Blinking text
-- `REVERSE` - Reversed colors
-- `HIDDEN` - Hidden text
-- `STRIKE` - Strikethrough text
-
-### ForegroundColor
-
-Text colors available as constants:
-
-- `BLACK`, `RED`, `GREEN`, `YELLOW`, `BLUE`, `MAGENTA`, `CYAN`, `WHITE`
-- Bright variants: `BRIGHT_BLACK`, `BRIGHT_RED`, `BRIGHT_GREEN`, etc.
-
-### BackgroundColor
-
-Background colors available as constants:
-
-- `BG_BLACK`, `BG_RED`, `BG_GREEN`, `BG_YELLOW`, `BG_BLUE`, `BG_MAGENTA`, `BG_CYAN`, `BG_WHITE`
-- Bright variants: `BG_BRIGHT_BLACK`, `BG_BRIGHT_RED`, `BG_BRIGHT_GREEN`, etc.
-
-## Combining Styles
-
-You can combine styles in two ways:
-
-### Using Style Objects
+### Color + Style
 
 ```python
-from charstyle import RED, BG_BLACK, BOLD, UNDERLINE, Style
+from charstyle import styled, Style
 
-# Combining color, background, and multiple text styles
-style = Style(color=RED, bg_color=BG_BLACK, style=(BOLD, UNDERLINE))
-print(style("Important error message"))
+# Combine a color with a text style
+warning_style = (Style.YELLOW, Style.BOLD)
+print(styled("Warning: Low disk space", warning_style))
 ```
 
-### Using Tuples
+### Color + Background
 
 ```python
-from charstyle import RED, BOLD, UNDERLINE, colored
+from charstyle import styled, Style
 
-# Combining styles with a tuple
-print(colored("Important error message", color=RED, style=(BOLD, UNDERLINE)))
+# Combine foreground and background colors
+highlight_style = (Style.BLACK, Style.BG_YELLOW)
+print(styled("IMPORTANT", highlight_style))
 ```
 
-For more information on when to use each approach, see the [Styling Options](../usage/styling-options.md) guide.
+### Multiple Text Styles
+
+```python
+from charstyle import styled, Style
+
+# Combine multiple text styles
+emphasis_style = (Style.BOLD, Style.UNDERLINE)
+print(styled("Critical Information", emphasis_style))
+```
+
+### Complex Combinations
+
+```python
+from charstyle import styled, Style
+
+# Combine multiple types of styles
+fancy_style = (Style.BRIGHT_RED, Style.BG_BLACK, Style.BOLD, Style.UNDERLINE)
+print(styled("URGENT: Action Required", fancy_style))
+```
+
+## Style Tuples vs. Direct Styling
+
+You can either create reusable style tuples or apply styles directly:
+
+```python
+from charstyle import styled, Style
+
+# Method 1: Reusable style tuple
+error_style = (Style.RED, Style.BOLD)
+print(styled("Error: Connection failed", error_style))
+
+# Method 2: Direct styling
+print(styled("Error: Connection failed", (Style.RED, Style.BOLD)))
+```
+
+## Best Practices
+
+1. **Create named style tuples** for styles you use frequently
+2. **Group related styles** into a set of consistent tuples
+3. **Use descriptive names** that indicate the purpose of the style
+4. **Keep style definitions centralized** in one part of your codebase
+
+## See Also
+
+- [Core API](core.md) - Documentation for the core styling functions
+- [Complex Styling](complex-styling.md) - Advanced styling techniques

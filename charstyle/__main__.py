@@ -16,9 +16,11 @@ def main() -> None:
 
     if args.icons:
         from charstyle.cli.icons_display import show_icons
+
         show_icons()
     else:
         from charstyle.cli.styles_display import show_styles
+
         show_styles()
 
 

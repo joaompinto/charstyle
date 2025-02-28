@@ -7,149 +7,31 @@ This library provides functions to add color, background color, and text styles
 Requires Python 3.11+ for StrEnum support.
 """
 
-# Import enum-based style definitions
-# Import complex styling functions
-# Import the core styling functions, constants and classes
-from charstyle.charstyle import (
-    BG_BLACK,
-    BG_BLUE,
-    BG_BRIGHT_BLACK,
-    BG_BRIGHT_BLUE,
-    BG_BRIGHT_CYAN,
-    BG_BRIGHT_GREEN,
-    BG_BRIGHT_MAGENTA,
-    BG_BRIGHT_RED,
-    BG_BRIGHT_WHITE,
-    BG_BRIGHT_YELLOW,
-    BG_CYAN,
-    BG_GREEN,
-    BG_MAGENTA,
-    BG_RED,
-    BG_WHITE,
-    BG_YELLOW,
-    # Constants for convenience (these are just references to enum values)
-    BLACK,
-    BLINK,
-    BLUE,
-    BOLD,
-    BRIGHT_BLACK,
-    BRIGHT_BLUE,
-    BRIGHT_CYAN,
-    BRIGHT_GREEN,
-    BRIGHT_MAGENTA,
-    BRIGHT_RED,
-    BRIGHT_WHITE,
-    BRIGHT_YELLOW,
-    CYAN,
-    DIM,
-    GREEN,
-    HIDDEN,
-    ITALIC,
-    MAGENTA,
-    RED,
-    REVERSE,
-    STRIKETHROUGH,
-    UNDERLINE,
-    WHITE,
-    YELLOW,
-    # Classes
-    Style,
-    black,
-    blink,
-    blue,
-    bold,
-    # Functions
-    colored,
-    cyan,
-    dim,
-    green,
-    hidden,
-    italic,
-    magenta,
-    red,
-    reverse,
-    strikethrough,
-    supports_color,
-    underline,
-    white,
-    yellow,
-)
-from charstyle.complex_style import style_complex, style_format, style_pattern_match, style_split
+# Import the core styling function and style enum
+from charstyle.charstyle import styled, supports_color
 
 # Import the Icon enum
 from charstyle.icons import Icon
-from charstyle.styles import BackgroundColor, ForegroundColor, TextStyle
+
+# Import pattern styling functions
+from charstyle.pattern_style import (
+    styled_format,
+    styled_pattern,
+    styled_pattern_match,
+    styled_split,
+)
+from charstyle.style_enum import Style
 
 __all__ = [
-    # Enums
-    "TextStyle",
-    "ForegroundColor",
-    "BackgroundColor",
-    "Icon",
-    # Constants for convenience
-    "BLACK",
-    "RED",
-    "GREEN",
-    "YELLOW",
-    "BLUE",
-    "MAGENTA",
-    "CYAN",
-    "WHITE",
-    "BRIGHT_BLACK",
-    "BRIGHT_RED",
-    "BRIGHT_GREEN",
-    "BRIGHT_YELLOW",
-    "BRIGHT_BLUE",
-    "BRIGHT_MAGENTA",
-    "BRIGHT_CYAN",
-    "BRIGHT_WHITE",
-    "BG_BLACK",
-    "BG_RED",
-    "BG_GREEN",
-    "BG_YELLOW",
-    "BG_BLUE",
-    "BG_MAGENTA",
-    "BG_CYAN",
-    "BG_WHITE",
-    "BG_BRIGHT_BLACK",
-    "BG_BRIGHT_RED",
-    "BG_BRIGHT_GREEN",
-    "BG_BRIGHT_YELLOW",
-    "BG_BRIGHT_BLUE",
-    "BG_BRIGHT_MAGENTA",
-    "BG_BRIGHT_CYAN",
-    "BG_BRIGHT_WHITE",
-    "BOLD",
-    "DIM",
-    "ITALIC",
-    "UNDERLINE",
-    "BLINK",
-    "REVERSE",
-    "HIDDEN",
-    "STRIKETHROUGH",
-    # Core functions
-    "colored",
-    "black",
-    "red",
-    "green",
-    "yellow",
-    "blue",
-    "magenta",
-    "cyan",
-    "white",
-    "bold",
-    "dim",
-    "italic",
-    "underline",
-    "blink",
-    "reverse",
-    "hidden",
-    "strikethrough",
-    "supports_color",
+    # Core API
+    "styled",
     "Style",
-    # Complex styling functions
-    "style_split",
-    "style_complex",
-    "style_pattern_match",
-    "style_format",
+    "supports_color",
+    # Icon enum
+    "Icon",
+    # Pattern styling functions
+    "styled_pattern",
+    "styled_format",
+    "styled_pattern_match",
+    "styled_split",
 ]

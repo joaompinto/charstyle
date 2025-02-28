@@ -38,7 +38,7 @@ class Icon(StrEnum):
     CLOUD = "☁"
     UMBRELLA = "☂"
     SNOWFLAKE = "❄"
-    
+
     # Weather cycle
     WEATHER_SUN = "☀️"
     WEATHER_SUN_SMALL_CLOUD = "🌤"
@@ -48,7 +48,7 @@ class Icon(StrEnum):
     WEATHER_RAIN = "🌧"
     WEATHER_SNOW = "🌨"
     WEATHER_THUNDERSTORM = "⛈"
-    
+
     # Globe/Earth
     GLOBE_EUROPE_AFRICA = "🌍"
     GLOBE_AMERICAS = "🌎"
@@ -67,7 +67,7 @@ class Icon(StrEnum):
     # Faces
     SMILE = "☺"
     FROWN = "☹"
-    
+
     # Monkeys
     MONKEY_SEE_NO_EVIL = "🙈"
     MONKEY_HEAR_NO_EVIL = "🙉"
@@ -88,7 +88,7 @@ class Icon(StrEnum):
     LIGHT_SHADE = "░"
     MEDIUM_SHADE = "▒"
     DARK_SHADE = "▓"
-    
+
     # Box drawing - basic
     H_LINE = "─"
     V_LINE = "│"
@@ -96,7 +96,7 @@ class Icon(StrEnum):
     TOP_RIGHT = "┐"
     BOTTOM_LEFT = "└"
     BOTTOM_RIGHT = "┘"
-    
+
     # Box drawing - extended
     H_LINE_HEAVY = "━"
     V_LINE_HEAVY = "┃"
@@ -110,7 +110,7 @@ class Icon(StrEnum):
     T_LEFT = "┤"
     T_DOWN = "┬"
     T_UP = "┴"
-    
+
     # Spinners - Braille patterns
     SPIN_BRAILLE_1 = "⠋"
     SPIN_BRAILLE_2 = "⠙"
@@ -122,13 +122,13 @@ class Icon(StrEnum):
     SPIN_BRAILLE_8 = "⠧"
     SPIN_BRAILLE_9 = "⠇"
     SPIN_BRAILLE_10 = "⠏"
-    
+
     # Spinners - Line patterns
     SPIN_LINE_1 = "|"
     SPIN_LINE_2 = "/"
     SPIN_LINE_3 = "-"
     SPIN_LINE_4 = "\\"
-    
+
     # Spinners - Dot patterns
     SPIN_DOT_1 = "⣾"
     SPIN_DOT_2 = "⣽"
@@ -138,7 +138,7 @@ class Icon(StrEnum):
     SPIN_DOT_6 = "⣟"
     SPIN_DOT_7 = "⣯"
     SPIN_DOT_8 = "⣷"
-    
+
     # Spinners - Arrow patterns
     SPIN_ARROW_1 = "←"
     SPIN_ARROW_2 = "↖"
@@ -148,7 +148,7 @@ class Icon(StrEnum):
     SPIN_ARROW_6 = "↘"
     SPIN_ARROW_7 = "↓"
     SPIN_ARROW_8 = "↙"
-    
+
     # Spinners - Emoji Arrow patterns
     SPIN_EMOJI_ARROW_1 = "⬅️"
     SPIN_EMOJI_ARROW_2 = "↖️"
@@ -158,7 +158,7 @@ class Icon(StrEnum):
     SPIN_EMOJI_ARROW_6 = "↘️"
     SPIN_EMOJI_ARROW_7 = "⬇️"
     SPIN_EMOJI_ARROW_8 = "↙️"
-    
+
     # Spinners - Clock patterns
     SPIN_CLOCK_1 = "🕛"
     SPIN_CLOCK_2 = "🕐"
@@ -178,14 +178,14 @@ class Icon(StrEnum):
     THUMBS_DOWN = "👎"
     CLAP = "👏"
     FIRE = "🔥"
-    
+
     # Hearts
     HEART_RED = "❤️"
     HEART_YELLOW = "💛"
     HEART_BLUE = "💙"
     HEART_PURPLE = "💜"
     HEART_GREEN = "💚"
-    
+
     # Celebration
     CONFETTI = "🎊"
     PARTY = "🎉"

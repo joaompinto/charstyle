@@ -1,202 +1,135 @@
 # Complex Styling Examples
 
-This page provides examples of complex styling techniques using Charstyle.
+This document provides examples of more complex styling operations using the charstyle library.
 
-## Style Split Examples
+## Styling Text with Delimiters
 
-Split a string by a delimiter and apply different styles to each part:
-
-```python
-from charstyle import BOLD, GREEN, RED, CYAN, ITALIC, style_split
-
-# Style a key-value pair with different styles
-print(style_split("Status: OK", ":", BOLD, GREEN))
-
-# Style with multiple styles
-print(
-    style_split(
-        "Error: File not found",
-        ":",
-        (RED, BOLD),  # Using a tuple of styles
-        ITALIC,
-    )
-)
-
-# Multiple delimiters with different styles
-print(style_split("Name: John Doe (Developer)", ":", CYAN, BOLD))
-```
-
-Output:
-```
-Status: OK
-Error: File not found
-Name: John Doe (Developer)
-```
-
-## Complex Pattern Styling
-
-Style different parts of a string based on a regular expression pattern:
+The `styled_split` function allows you to split text by a delimiter and apply different styles to each part.
 
 ```python
-from charstyle import BLUE, GREEN, YELLOW, CYAN, MAGENTA, RED, BOLD, style_complex
+from charstyle import styled, Style, styled_split
 
-# Style with regular expression pattern
-print(
-    style_complex(
-        "Status: OK (processed)",
-        r"(: |\()",
-        BLUE,   # "Status"
-        GREEN,  # "OK "
-        YELLOW, # "processed)"
-    )
-)
+# Split text by a delimiter and apply different styles to each part
+text = "Status: OK"
+result = styled_split(text, ":", Style.RED, Style.GREEN)
+print(result)  # "Status" in red and " OK" in green
 
-# Log entry styling
-print(
-    style_complex(
-        "[INFO] User login: admin",
-        r"(\[|\] |\: )",
-        CYAN,    # "INFO"
-        MAGENTA, # "User login"
-        GREEN,   # "admin"
-    )
-)
+# With multiple delimiters
+text = "First:Second:Third"
+result = styled_split(text, ":", Style.RED, Style.GREEN, Style.BLUE)
+print(result)  # "First" in red, "Second" in green, and "Third" in blue
 
-# Server configuration
-print(
-    style_complex(
-        "Server=production; Port=8080; Active=true",
-        r"(=|; )",
-        (BLUE, BOLD), # "Server"
-        GREEN,        # "production"
-        (BLUE, BOLD), # "Port"
-        YELLOW,       # "8080"
-        (BLUE, BOLD), # "Active"
-        RED,          # "true"
-    )
-)
+# With multiple styles per part
+text = "Error: File not found"
+result = styled_split(text, ":", (Style.BOLD, Style.RED), (Style.ITALIC, Style.YELLOW))
+print(result)  # "Error" in bold red and " File not found" in italic yellow
 ```
 
-Output:
-```
-Status: OK (processed)
-[INFO] User login: admin
-Server=production; Port=8080; Active=true
-```
+## Styling Text with Regular Expressions
 
-## Pattern Matching with Named Groups
-
-Style different parts of a string based on named capture groups in a regular expression:
+The `styled_pattern` function allows you to style text based on regular expression patterns.
 
 ```python
-from charstyle import RED, YELLOW, BRIGHT_RED, BOLD, WHITE, GREEN, BRIGHT_BLACK, style_pattern_match
+from charstyle import styled, Style, styled_pattern
 
-# HTTP status code styling
-pattern = r"(?P<code>\d{3}) (?P<status>\w+) - (?P<message>.*)"
+# Style text that matches a pattern
+text = "Hello World"
+result = styled_pattern(text, r"(World)", Style.RED)
+print(result)  # "Hello " unchanged and "World" in red
+
+# Style multiple parts of text
+text = "User: admin, Role: admin"
+result = styled_pattern(text, r"(User|Role):(.*?)(,|$)", Style.BLUE, Style.GREEN)
+print(result)  # "User" and "Role" in blue, and " admin" and " admin" in green
+
+# Style a log message
+text = "2023-04-15 [INFO] User logged in"
+pattern = r"(\d{4}-\d{2}-\d{2})|(\[\w+\])|(.*)"
+result = styled_pattern(text, pattern, Style.BLUE, Style.YELLOW, Style.WHITE)
+print(result)  # Date in blue, log level in yellow, and message in white
+```
+
+## Styling Text with Named Patterns
+
+The `styled_pattern_match` function allows you to style text based on named groups in a regular expression pattern.
+
+```python
+from charstyle import styled, Style, styled_pattern_match
+
+# Style text with named groups
+pattern = r"(?P<name>\w+): (?P<value>\d+)"
+style_map = {"name": Style.RED, "value": Style.GREEN}
+text = "Count: 42"
+result = styled_pattern_match(text, pattern, style_map)
+print(result)  # "Count" in red and "42" in green
+
+# Style a log message
+pattern = r"(?P<date>\d{4}-\d{2}-\d{2}) (?P<level>\[\w+\]) (?P<message>.*)"
 style_map = {
-    "code": (BRIGHT_RED, BOLD),
-    "status": RED,
-    "message": YELLOW,
+    "date": Style.BLUE,
+    "level": Style.YELLOW,
+    "message": Style.WHITE
 }
-print(
-    style_pattern_match(
-        "404 NotFound - The requested resource does not exist", 
-        pattern, 
-        style_map
-    )
-)
+text = "2023-04-15 [INFO] User logged in"
+result = styled_pattern_match(text, pattern, style_map)
+print(result)  # Date in blue, log level in yellow, and message in white
 
-# Log entry styling
-pattern = r"(?P<time>\d{2}:\d{2}:\d{2}) (?P<level>\w+): (?P<message>.*)"
+# Style a JSON-like string
+pattern = r'"(?P<key>\w+)": "(?P<value>[^"]+)"'
 style_map = {
-    "time": BRIGHT_BLACK,
-    "level": (GREEN, BOLD),
-    "message": WHITE,
+    "key": (Style.BOLD, Style.BLUE),
+    "value": Style.GREEN
 }
-print(
-    style_pattern_match(
-        "14:25:36 INFO: User authentication successful", 
-        pattern, 
-        style_map
-    )
-)
+text = '{"name": "John", "age": "30"}'
+result = styled_pattern_match(text, pattern, style_map)
+print(result)  # Keys in bold blue and values in green
 ```
 
-Output:
-```
-404 NotFound - The requested resource does not exist
-14:25:36 INFO: User authentication successful
-```
+## Formatting Styled Text
 
-## Format-based Styling
-
-Style different parts of a string based on format placeholders:
+The `styled_format` function allows you to format text with styled values.
 
 ```python
-from charstyle import BLUE, GREEN, RED, BOLD, YELLOW, BRIGHT_BLACK, style_format
+from charstyle import styled, Style, styled_format
 
-# Format with positional arguments
-print(style_format("{} = {}", ("username", BLUE), ("admin", GREEN)))
+# Format text with styled values
+result = styled_format("{} {}", ("Hello", Style.RED), ("World", Style.GREEN))
+print(result)  # "Hello" in red and "World" in green
 
-# Format with keyword arguments
-print(
-    style_format(
-        "HTTP/{version} {code} {status}",
-        version=("1.1", BRIGHT_BLACK),
-        code=("200", GREEN),
-        status=("OK", (GREEN, BOLD)),
-    )
-)
+# Format text with named placeholders
+result = styled_format("{name} is {age} years old",
+                      name=("John", Style.BLUE),
+                      age=("30", Style.GREEN))
+print(result)  # "John" in blue and "30" in green
 
-# Command line example
-print(
-    style_format(
-        "{command} {arg1} {arg2}",
-        command=("git", (RED, BOLD)),
-        arg1=("commit", YELLOW),
-        arg2=("-m", BLUE),
-    )
-)
+# Format text with mixed placeholders
+result = styled_format("{} has {color} eyes",
+                      ("Alice", Style.BOLD),
+                      color=("blue", Style.BLUE))
+print(result)  # "Alice" in bold and "blue" in blue
 ```
 
-Output:
-```
-username = admin
-HTTP/1.1 200 OK
-git commit -m
-```
+## Combining Multiple Styling Functions
 
-## Combining Different Techniques
-
-You can combine different styling techniques for more complex output:
+You can combine multiple styling functions to create complex styled text.
 
 ```python
-from charstyle import RED, GREEN, BLUE, YELLOW, BOLD, ITALIC, style_split, style_format
+from charstyle import styled, Style, styled_split, styled_format
 
-# Combine style_split with style_format
-header = style_format("{} {}", ("System", (BLUE, BOLD)), ("Status", BLUE))
-value = style_split("State: Running", ":", (YELLOW, ITALIC), GREEN)
-print(f"{header}: {value}")
+# Combine styled_split and styled_format
+name = "John Doe"
+age = 30
+text = styled_format("{}: {}",
+                    ("Name", (Style.BOLD, Style.BLUE)),
+                    (name, Style.GREEN))
+text += "\n" + styled_format("{}: {}",
+                           ("Age", (Style.BOLD, Style.BLUE)),
+                           (str(age), Style.GREEN))
+print(text)  # "Name" in bold blue, "John Doe" in green, "Age" in bold blue, and "30" in green
 
-# Create a styled table row
-def styled_row(key, value, status):
-    key_styled = style_format("{}", (key, (BLUE, BOLD)))
-    value_styled = style_format("{}", (value, YELLOW))
-    if status == "ok":
-        status_styled = style_format("[{}]", ("OK", GREEN))
-    else:
-        status_styled = style_format("[{}]", ("FAIL", RED))
-    return f"{key_styled}: {value_styled} {status_styled}"
-
-print(styled_row("CPU", "2.4 GHz", "ok"))
-print(styled_row("Memory", "16 GB", "ok"))
-print(styled_row("Disk", "95% full", "fail"))
-```
-
-Output:
-```
-System Status: State: Running
-CPU: 2.4 GHz [OK]
-Memory: 16 GB [OK]
-Disk: 95% full [FAIL]
-```
+# Combine styled_split and styled
+header = styled("User Information", (Style.BOLD, Style.UNDERLINE))
+details = styled_split("Email: john@example.com", ":",
+                      (Style.BOLD, Style.BLUE),
+                      Style.GREEN)
+print(f"{header}\n{details}")  # Header in bold and underlined, "Email" in bold blue, and "john@example.com" in green

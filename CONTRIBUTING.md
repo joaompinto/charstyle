@@ -1,6 +1,6 @@
-# Contributing to Charstyle
+# Contributing to charstyle
 
-Thank you for your interest in contributing to Charstyle!
+Thank you for your interest in contributing to charstyle!
 
 ## Development Setup
 

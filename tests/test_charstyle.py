@@ -1,102 +1,89 @@
-#!/usr/bin/env python3
 """
-Unit tests for the charstyle library.
+Tests for the core charstyle functionality.
 """
 
+import os
 import unittest
+from unittest.mock import patch
 
-import charstyle
+from charstyle import Style, styled
+from charstyle.charstyle import supports_color
 
 
 class TestCharstyle(unittest.TestCase):
-    """Test cases for charstyle library."""
+    """Test cases for the charstyle module."""
 
     def setUp(self):
-        """Set up the test case."""
-        # Ensure color is supported for tests
-        charstyle._supports_color = True
+        """Set up the test environment."""
+        # Force color support for testing
+        os.environ["FORCE_COLOR"] = "1"
+        # Ensure sys.stdout.isatty() returns True
+        self.isatty_patcher = patch("sys.stdout.isatty", return_value=True)
+        self.isatty_mock = self.isatty_patcher.start()
 
-    # NOTE: The order of ANSI style codes is important in these tests.
-    # The implementation combines styles in the following order:
-    # 1. Style codes (BOLD, ITALIC, etc.) are applied first
-    # 2. Color codes (RED, GREEN, etc.) are applied second
-    # 3. Background color codes (BG_RED, BG_GREEN, etc.) are applied last
-    # This results in strings like "\033[1;31;44mtext\033[0m" (bold, red text on blue background)
+    def tearDown(self):
+        """Clean up the test environment."""
+        # Remove the environment variable
+        if "FORCE_COLOR" in os.environ:
+            del os.environ["FORCE_COLOR"]
+        # Stop the patch
+        self.isatty_patcher.stop()
 
-    def test_colored(self):
-        """Test the colored function."""
-        # Test with color only
-        result = charstyle.colored("test", charstyle.RED)
-        expected = "\033[31mtest\033[0m"
+    def test_styled_basic(self):
+        """Test the basic functionality of the styled function."""
+        # Test with a single style
+        result = styled("Hello", Style.RED)
+        expected = "\033[31mHello\033[0m"
         self.assertEqual(result, expected)
 
-        # Test with background color only
-        result = charstyle.colored("test", bg_color=charstyle.BG_BLUE)
-        expected = "\033[44mtest\033[0m"
+    def test_styled_multiple_styles(self):
+        """Test styled with multiple styles."""
+        # Test with multiple styles
+        result = styled("Hello", (Style.BOLD, Style.RED))
+        expected = "\033[1;31mHello\033[0m"
         self.assertEqual(result, expected)
 
-        # Test with style only
-        result = charstyle.colored("test", style=charstyle.BOLD)
-        expected = "\033[1mtest\033[0m"
+        # Test with three styles
+        result = styled("Hello", (Style.BOLD, Style.UNDERLINE, Style.RED))
+        expected = "\033[1;4;31mHello\033[0m"
         self.assertEqual(result, expected)
 
-        # Test with all parameters
-        result = charstyle.colored(
-            "test", charstyle.GREEN, charstyle.BG_YELLOW, charstyle.UNDERLINE
-        )
-        expected = "\033[4;32;43mtest\033[0m"
+    def test_styled_with_background(self):
+        """Test styled with background colors."""
+        # Test with foreground and background
+        result = styled("Hello", (Style.RED, Style.BG_BLUE))
+        expected = "\033[31;44mHello\033[0m"
         self.assertEqual(result, expected)
 
-    def test_convenience_functions(self):
-        """Test the convenience color functions."""
-        # Test red
-        result = charstyle.red("test")
-        expected = "\033[31mtest\033[0m"
+    def test_styled_with_bright_colors(self):
+        """Test styled with bright colors."""
+        # Test with bright foreground
+        result = styled("Hello", Style.BRIGHT_RED)
+        expected = "\033[91mHello\033[0m"
         self.assertEqual(result, expected)
 
-        # Test green with background
-        result = charstyle.green("test", bg=charstyle.BG_BLACK)
-        expected = "\033[32;40mtest\033[0m"
+        # Test with bright background
+        result = styled("Hello", Style.BG_BRIGHT_GREEN)
+        expected = "\033[102mHello\033[0m"
         self.assertEqual(result, expected)
 
-        # Test blue with style
-        result = charstyle.blue("test", style=charstyle.BOLD)
-        expected = "\033[1;34mtest\033[0m"
-        self.assertEqual(result, expected)
+    def test_styled_no_color_support(self):
+        """Test styled when color is not supported."""
+        # Mock supports_color to return False
+        with patch("charstyle.charstyle.supports_color", return_value=False):
+            result = styled("Hello", Style.RED)
+            expected = "Hello"
+            self.assertEqual(result, expected)
 
-    def test_style_functions(self):
-        """Test the style convenience functions."""
-        # Test bold
-        result = charstyle.bold("test")
-        expected = "\033[1mtest\033[0m"
-        self.assertEqual(result, expected)
+    def test_supports_color(self):
+        """Test the supports_color function."""
+        # With FORCE_COLOR set, should return True
+        self.assertTrue(supports_color())
 
-        # Test bold with color
-        result = charstyle.bold("test", color=charstyle.YELLOW)
-        expected = "\033[1;33mtest\033[0m"
-        self.assertEqual(result, expected)
-
-        # Test underline with color and background
-        result = charstyle.underline("test", color=charstyle.CYAN, bg=charstyle.BG_RED)
-        expected = "\033[4;36;41mtest\033[0m"
-        self.assertEqual(result, expected)
-
-    def test_style_class(self):
-        """Test the Style class."""
-        # Create a style
-        style = charstyle.Style(
-            color=charstyle.MAGENTA, bg_color=charstyle.BG_WHITE, style=charstyle.BOLD
-        )
-
-        # Test apply method
-        result = style.apply("test")
-        expected = "\033[1;35;47mtest\033[0m"
-        self.assertEqual(result, expected)
-
-        # Test call method
-        result = style("test")
-        expected = "\033[1;35;47mtest\033[0m"
-        self.assertEqual(result, expected)
+        # With NO_COLOR set, should return False
+        os.environ["NO_COLOR"] = "1"
+        self.assertFalse(supports_color())
+        del os.environ["NO_COLOR"]
 
 
 if __name__ == "__main__":

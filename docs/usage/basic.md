@@ -1,96 +1,82 @@
 # Basic Usage
 
-This page covers the basic usage of Charstyle for styling terminal text.
+This guide covers the basic usage of charstyle for styling terminal text.
 
-## Importing Charstyle
+## Importing charstyle
 
 ```python
-# Import the main colored function and style constants
-from charstyle import colored, RED, GREEN, BLUE, BOLD, ITALIC
-
-# Or import convenience functions
-from charstyle import red, green, blue, bold, italic
+# Import the styled function and Style enum
+from charstyle import styled, Style
 ```
 
-## Basic Text Coloring
+## Foreground Colors
 
 ```python
-from charstyle import RED, GREEN, BLUE, colored
+from charstyle import styled, Style
 
-# Color text
-print(colored("This text is red", color=RED))
-print(colored("This text is green", color=GREEN))
-print(colored("This text is blue", color=BLUE))
+# Apply colors to text
+print(styled("This text is red", Style.RED))
+print(styled("This text is green", Style.GREEN))
+print(styled("This text is blue", Style.BLUE))
 ```
 
 ## Text Styles
 
 ```python
-from charstyle import BOLD, ITALIC, UNDERLINE, STRIKE, colored
+from charstyle import styled, Style
 
 # Apply text styles
-print(colored("This text is bold", style=BOLD))
-print(colored("This text is italic", style=ITALIC))
-print(colored("This text is underlined", style=UNDERLINE))
-print(colored("This text is strikethrough", style=STRIKE))
+print(styled("This text is bold", Style.BOLD))
+print(styled("This text is italic", Style.ITALIC))
+print(styled("This text is underlined", Style.UNDERLINE))
+print(styled("This text has strikethrough", Style.STRIKE))
 ```
 
 ## Background Colors
 
 ```python
-from charstyle import BG_RED, BG_GREEN, BG_BLUE, colored
+from charstyle import styled, Style
 
 # Apply background colors
-print(colored("Text with red background", bg_color=BG_RED))
-print(colored("Text with green background", bg_color=BG_GREEN))
-print(colored("Text with blue background", bg_color=BG_BLUE))
+print(styled("Red background", Style.BG_RED))
+print(styled("Green background", Style.BG_GREEN))
+print(styled("Blue background", Style.BG_BLUE))
 ```
 
 ## Combining Styles
 
-```python
-from charstyle import RED, BG_YELLOW, BOLD, UNDERLINE, colored
-
-# Combine color, background, and style
-print(colored("Important warning", color=RED, bg_color=BG_YELLOW, style=BOLD))
-
-# Combine multiple text styles
-print(colored("Critical error", color=RED, style=(BOLD, UNDERLINE)))
-```
-
-## Convenience Functions
+You can combine multiple styles by passing a tuple of style constants:
 
 ```python
-from charstyle import red, green, blue, bold, italic, underline
+from charstyle import styled, Style
 
-# Use convenience functions
-print(red("This text is red"))
-print(bold("This text is bold"))
-print(green("This text is green"))
+# Combine text style and foreground color
+print(styled("Bold red text", (Style.RED, Style.BOLD)))
+print(styled("Italic blue text", (Style.BLUE, Style.ITALIC)))
 
-# Combine convenience functions
-print(bold(red("This text is bold and red")))
+# Combine foreground and background colors
+print(styled("Red text on blue background", (Style.RED, Style.BG_BLUE)))
 
-# Add style parameter to convenience functions
-print(blue("This text is blue and underlined", style=UNDERLINE))
+# Combine text style, foreground color, and background color
+print(styled("Bold green text on yellow background", (Style.GREEN, Style.BG_YELLOW, Style.BOLD)))
 ```
 
 ## Checking Terminal Support
 
-```python
-from charstyle import supports_color, RED, colored
+charstyle includes a function to check if the current terminal supports colors:
 
-# Check if the terminal supports colors
+```python
+from charstyle import supports_color
+
 if supports_color():
-    print(colored("This text is red", color=RED))
+    print("Your terminal supports colors!")
 else:
-    print("This terminal doesn't support colors")
+    print("Your terminal does not support colors.")
 ```
 
 ## Next Steps
 
-Now that you've learned the basics of Charstyle, you can explore more advanced features:
+Now that you've learned the basics, you can explore:
 
-- [Advanced Usage](advanced.md) - Learn about complex styling techniques
-- [Styling Options](styling-options.md) - Understand when to use Style objects vs. tuples
-- [API Reference](../api/core.md) - Detailed API documentation
+- [Advanced Usage](advanced.md) - Learn about complex styling functions
+- [Styling Options](styling-options.md) - See all available styles and colors

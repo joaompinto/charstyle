@@ -1,44 +1,100 @@
 # Core API
 
-This page documents the core functions and constants in the Charstyle library.
+This page documents the core API of charstyle.
 
-## colored
+## styled
 
-The main function for applying styles to text.
+Apply styles to text.
 
 ```python
-colored(text: str, color: ForegroundColor | None = None, bg_color: BackgroundColor | None = None, style: TextStyle | tuple[TextStyle, ...] | None = None) -> str
+styled(text: str, style: StyleType) -> str
 ```
 
 **Parameters:**
 - `text` (str): The text to style
-- `color` (ForegroundColor | None): The text color to apply
-- `bg_color` (BackgroundColor | None): The background color to apply
-- `style` (TextStyle | tuple[TextStyle, ...] | None): The text style(s) to apply
+- `style` (StyleType): The style to apply. Can be a single style or a tuple of styles.
 
 **Returns:**
 - `str`: The styled text
 
 **Example:**
 ```python
-from charstyle import RED, BG_BLACK, BOLD, colored
+from charstyle import styled, Style
 
-# Basic usage
-print(colored("Hello, World!", color=RED))
+# Style with a single style
+print(styled("Hello", Style.RED))
 
-# With background color
-print(colored("Warning", color=RED, bg_color=BG_BLACK))
+# Style with multiple styles
+print(styled("Hello", (Style.BOLD, Style.RED)))
+print(styled("Hello", (Style.BOLD, Style.UNDERLINE, Style.RED)))
 
-# With text style
-print(colored("Important", style=BOLD))
+# Style with background color
+print(styled("Hello", (Style.RED, Style.BG_BLUE)))
+```
 
-# Combining multiple styles
-print(colored("Critical Error", color=RED, style=(BOLD, UNDERLINE)))
+## Style
+
+Enum containing all available styles.
+
+```python
+class Style(StrEnum):
+    # Text styles
+    NORMAL = "0"
+    BOLD = "1"
+    DIM = "2"
+    ITALIC = "3"
+    UNDERLINE = "4"
+    BLINK = "5"
+    REVERSE = "7"
+    HIDDEN = "8"
+    STRIKE = "9"
+
+    # Foreground colors
+    BLACK = "30"
+    RED = "31"
+    GREEN = "32"
+    YELLOW = "33"
+    BLUE = "34"
+    MAGENTA = "35"
+    CYAN = "36"
+    WHITE = "37"
+    DEFAULT = "39"
+
+    # Bright foreground colors
+    BRIGHT_BLACK = "90"
+    BRIGHT_RED = "91"
+    BRIGHT_GREEN = "92"
+    BRIGHT_YELLOW = "93"
+    BRIGHT_BLUE = "94"
+    BRIGHT_MAGENTA = "95"
+    BRIGHT_CYAN = "96"
+    BRIGHT_WHITE = "97"
+
+    # Background colors
+    BG_BLACK = "40"
+    BG_RED = "41"
+    BG_GREEN = "42"
+    BG_YELLOW = "43"
+    BG_BLUE = "44"
+    BG_MAGENTA = "45"
+    BG_CYAN = "46"
+    BG_WHITE = "47"
+    BG_DEFAULT = "49"
+
+    # Bright background colors
+    BG_BRIGHT_BLACK = "100"
+    BG_BRIGHT_RED = "101"
+    BG_BRIGHT_GREEN = "102"
+    BG_BRIGHT_YELLOW = "103"
+    BG_BRIGHT_BLUE = "104"
+    BG_BRIGHT_MAGENTA = "105"
+    BG_BRIGHT_CYAN = "106"
+    BG_BRIGHT_WHITE = "107"
 ```
 
 ## supports_color
 
-Check if the terminal supports color output.
+Check if the terminal supports color.
 
 ```python
 supports_color() -> bool
@@ -49,64 +105,10 @@ supports_color() -> bool
 
 **Example:**
 ```python
-from charstyle import supports_color, RED, colored
+from charstyle import supports_color
 
 if supports_color():
-    print(colored("This text is red", color=RED))
+    print("Terminal supports color")
 else:
-    print("This text is not colored because your terminal doesn't support colors")
+    print("Terminal does not support color")
 ```
-
-## Style Enums
-
-Charstyle provides various style constants through enums:
-
-### TextStyle
-
-Text style modifiers:
-
-```python
-from charstyle import NORMAL, BOLD, DIM, ITALIC, UNDERLINE, BLINK, REVERSE, HIDDEN, STRIKE
-
-print(colored("Bold text", style=BOLD))
-print(colored("Italic text", style=ITALIC))
-print(colored("Underlined text", style=UNDERLINE))
-```
-
-### ForegroundColor
-
-Text colors:
-
-```python
-from charstyle import BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE
-from charstyle import BRIGHT_BLACK, BRIGHT_RED, BRIGHT_GREEN, BRIGHT_YELLOW, BRIGHT_BLUE, BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE
-
-print(colored("Red text", color=RED))
-print(colored("Bright green text", color=BRIGHT_GREEN))
-```
-
-### BackgroundColor
-
-Background colors:
-
-```python
-from charstyle import BG_BLACK, BG_RED, BG_GREEN, BG_YELLOW, BG_BLUE, BG_MAGENTA, BG_CYAN, BG_WHITE
-from charstyle import BG_BRIGHT_BLACK, BG_BRIGHT_RED, BG_BRIGHT_GREEN, BG_BRIGHT_YELLOW, BG_BRIGHT_BLUE, BG_BRIGHT_MAGENTA, BG_BRIGHT_CYAN, BG_BRIGHT_WHITE
-
-print(colored("Text with red background", bg_color=BG_RED))
-print(colored("Text with bright blue background", bg_color=BG_BRIGHT_BLUE))
-```
-
-## Convenience Functions
-
-Charstyle provides convenience functions for common styling operations:
-
-```python
-from charstyle import red, green, blue, bold, italic, underline
-
-print(red("This text is red"))
-print(bold("This text is bold"))
-print(green("This text is green", style=BOLD))  # Can combine with styles
-```
-
-For more advanced styling options, see the [Style Objects](style-objects.md) and [Complex Styling](complex-styling.md) pages.

@@ -1,24 +1,24 @@
-# Charstyle Documentation
+# charstyle Documentation
 
-Welcome to the documentation for **Charstyle**, a Python library for styling terminal text output using ANSI escape sequences.
+Welcome to the documentation for **charstyle**, a Python library for styling terminal text output using ANSI escape sequences.
 
 ## Overview
 
-Charstyle provides a simple and intuitive API for adding color, background color, and text styles (bold, italic, underline, etc.) to text output in terminal applications.
+charstyle provides a simple and intuitive API for adding color, background color, and text styles (bold, italic, underline, etc.) to text output in terminal applications.
 
 ```python
-from charstyle import RED, BOLD, colored
+from charstyle import styled, Style
 
 # Simple styling
-print(colored("This is red and bold text", color=RED, style=BOLD))
+print(styled("This is red and bold text", (Style.RED, Style.BOLD)))
 ```
 
 ## Features
 
 - **Simple API**: Easy-to-use functions for styling text
 - **Enum-based Constants**: Type-safe constants for colors and styles
-- **Convenience Functions**: Shorthand functions for common styling operations
-- **Complex Styling**: Advanced functions for styling parts of strings
+- **Style Tuples**: Combine multiple styles in a single parameter
+- **Pattern Styling**: Advanced functions for styling parts of strings
 - **Terminal Icons**: Built-in icons for terminal output
 
 ## Installation
@@ -29,7 +29,7 @@ pip install charstyle
 
 ## Quick Links
 
-- [Getting Started](getting-started.md) - Learn the basics of Charstyle
-- [Basic Usage](usage/basic.md) - Simple styling examples
-- [Advanced Usage](usage/advanced.md) - Complex styling techniques
-- [API Reference](api/core.md) - Detailed API documentation
+- [Getting Started](getting-started.md): Quick introduction to charstyle
+- [Basic Usage](usage/basic.md): Learn the basics of styling text
+- [Advanced Usage](usage/advanced.md): Explore complex styling techniques
+- [API Reference](api/core.md): Detailed documentation of the API

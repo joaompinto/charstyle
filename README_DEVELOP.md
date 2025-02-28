@@ -1,4 +1,4 @@
-# Charstyle Developer Guide
+# charstyle Developer Guide
 
 This guide is intended for developers who want to contribute to or maintain the charstyle library itself. For information on using the library in your applications, see [README.md](README.md).
 
@@ -55,6 +55,34 @@ This project follows strict code quality guidelines enforced through automated t
 - **Black** for code formatting
 - **Ruff** for linting and code quality checks
 - **Mypy** for static type checking
+
+#### Pre-commit Hooks
+
+The project uses pre-commit hooks to ensure code quality standards are met before committing changes. This helps catch issues early and maintains consistent code quality.
+
+To set up pre-commit:
+
+```bash
+# Option 1: Using the setup script (recommended)
+python scripts/setup_pre_commit.py
+
+# Option 2: Manual installation
+pdm run pre-commit-install
+```
+
+The pre-commit configuration includes:
+- Code formatting with Black
+- Linting with Ruff
+- Type checking with MyPy
+- Various file checks (YAML, TOML, trailing whitespace, etc.)
+
+You can manually run all pre-commit hooks with:
+
+```bash
+pdm run pre-commit-run
+# or directly
+pre-commit run --all-files
+```
 
 #### Formatting and Linting
 
