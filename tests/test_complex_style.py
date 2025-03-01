@@ -6,7 +6,9 @@ import os
 import unittest
 from unittest.mock import patch
 
+import charstyle.charstyle
 from charstyle import Style
+from charstyle.charstyle import supports_color
 from charstyle.pattern_style import (
     styled_format,
     styled_pattern,
@@ -20,6 +22,12 @@ class TestComplexStyle(unittest.TestCase):
 
     def setUp(self):
         """Set up the test environment."""
+        # Reset the global cache
+        charstyle.charstyle._SUPPORTS_COLOR = None
+
+        # Clear the lru_cache
+        supports_color.cache_clear()
+
         # Force color support for testing
         os.environ["FORCE_COLOR"] = "1"
         # Ensure sys.stdout.isatty() returns True
@@ -92,29 +100,29 @@ class TestComplexStyle(unittest.TestCase):
     def test_styled_pattern_match(self):
         """Test the styled_pattern_match function."""
         # Test with named groups
-        pattern = r"(?P<salutation>Hello) (?P<name>World)"
-        style_map = {"salutation": Style.RED, "name": Style.GREEN}
+        pattern = r"(?P<salutation>Hello) (?P<n>World)"
+        style_map = {"salutation": Style.RED, "n": Style.GREEN}
         result = styled_pattern_match("Hello World", pattern, style_map)
         expected = "\033[31mHello\033[0m \033[32mWorld\033[0m"
         self.assertEqual(result, expected)
 
         # Test with pattern that doesn't match
-        pattern = r"(?P<salutation>Goodbye) (?P<name>World)"
-        style_map = {"salutation": Style.RED, "name": Style.GREEN}
+        pattern = r"(?P<salutation>Goodbye) (?P<n>World)"
+        style_map = {"salutation": Style.RED, "n": Style.GREEN}
         result = styled_pattern_match("Hello World", pattern, style_map)
         expected = "Hello World"
         self.assertEqual(result, expected)
 
         # Test with pattern that has more groups than styles
-        pattern = r"(?P<salutation>Hello) (?P<name>World)"
+        pattern = r"(?P<salutation>Hello) (?P<n>World)"
         style_map = {"salutation": Style.RED}
         result = styled_pattern_match("Hello World", pattern, style_map)
         expected = "\033[31mHello\033[0m World"
         self.assertEqual(result, expected)
 
         # Test with multiple styles per group
-        pattern = r"(?P<salutation>Hello) (?P<name>World)"
-        style_map = {"salutation": (Style.BOLD, Style.RED), "name": (Style.ITALIC, Style.GREEN)}
+        pattern = r"(?P<salutation>Hello) (?P<n>World)"
+        style_map = {"salutation": (Style.BOLD, Style.RED), "n": (Style.ITALIC, Style.GREEN)}
         result = styled_pattern_match("Hello World", pattern, style_map)
         expected = "\033[1;31mHello\033[0m \033[3;32mWorld\033[0m"
         self.assertEqual(result, expected)

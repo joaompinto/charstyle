@@ -207,7 +207,7 @@ def main() -> int:
     for i, (code_block, line_number, section_header) in enumerate(code_blocks):
         block_example = CodeExample(code_block, line_number, i)
         print(
-            f"Testing block {i+1} (starting at line {line_number}) [{section_header}]... ", end=""
+            f"Testing block {i + 1} (starting at line {line_number}) [{section_header}]... ", end=""
         )
         success, error = test_example(block_example)
 
@@ -216,7 +216,7 @@ def main() -> int:
         else:
             all_blocks_success = False
             print("FAIL")
-            print(f"FAIL Block {i+1} (starting at line {line_number}) failed with error:")
+            print(f"FAIL Block {i + 1} (starting at line {line_number}) failed with error:")
             print(error)
 
     # Now also test individual examples for more detailed feedback
@@ -268,7 +268,7 @@ def main() -> int:
 
                 # If no specific header in the code, use the section header
                 if not header:
-                    header = f"# {section_header} (part {j+1})"
+                    header = f"# {section_header} (part {j + 1})"
 
                 sub_examples.append(CodeExample(example_code, example_line, i, header))
 

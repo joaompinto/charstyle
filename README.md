@@ -67,6 +67,90 @@ print(styled("Underlined red text", (Style.RED, Style.UNDERLINE)))
 print(styled("Custom color and background", (Style.RED, Style.BG_BLUE, Style.BOLD)))
 ```
 
+### Alignment and Width Formatting
+
+```python
+# Import the Align enum for text alignment
+from charstyle import styled, Style, Align
+
+# Fixed width examples
+print(styled("Default left align", Style.GREEN, width=30))
+print(styled("Right aligned", Style.YELLOW, width=30, align=Align.RIGHT))
+print(styled("Center aligned", Style.CYAN, width=30, align=Align.CENTER))
+
+# Custom fill character examples
+print(styled("Header", Style.BOLD, width=20, fill_char="-", align=Align.CENTER))
+print(styled("Title", Style.UNDERLINE, width=40, fill_char="=", align=Align.CENTER))
+
+# Table-like formatting
+headers = [
+    styled("ID", Style.BOLD, width=5, align=Align.CENTER),
+    styled("Name", Style.BOLD, width=20, align=Align.CENTER),
+    styled("Status", Style.BOLD, width=15, align=Align.CENTER),
+]
+print("".join(headers))
+```
+
+### Creating Tables
+
+```python
+from charstyle import tabled, Style, Align
+
+# Sample data
+headers = ["ID", "Name", "Department", "Status"]
+rows = [
+    ["1", "Alice Smith", "Engineering", "Active"],
+    ["2", "Bob Johnson", "Marketing", "Inactive"],
+    ["3", "Carol Williams", "Finance", "Active"],
+]
+
+# Simple table
+print(tabled(headers, rows))
+
+# Styled table with borders (default style)
+print(tabled(
+    headers, 
+    rows,
+    header_style=Style.BOLD,
+    widths=[5, 20, 15, 12],
+    alignments=[Align.CENTER, Align.LEFT, Align.LEFT, Align.CENTER],
+    borders=True
+))
+
+# Compact style table
+print(tabled(
+    headers,
+    rows,
+    style="compact",
+    header_style=Style.UNDERLINE
+))
+
+# Thin style table
+print(tabled(
+    headers,
+    rows,
+    style="thin",
+    header_style=(Style.BOLD, Style.UNDERLINE)
+))
+
+# Table with conditional formatting
+def status_formatter(row, col, value):
+    if col == 3:  # Status column
+        if value == "Active":
+            return styled(value, Style.GREEN, align=Align.CENTER)
+        else:
+            return styled(value, Style.RED, align=Align.CENTER)
+    return None
+
+print(tabled(
+    headers,
+    rows,
+    header_style=Style.BOLD,
+    cell_formatter=status_formatter,
+    borders=True
+))
+```
+
 ### Advanced Usage
 
 ```python
@@ -108,6 +192,32 @@ print(styled("Bold red italic",
 # Fancy style with multiple attributes
 fancy_style = (Style.BRIGHT_GREEN, Style.BG_BLACK, Style.BOLD, Style.UNDERLINE)
 print(styled("Bold underlined bright green text on black background", fancy_style))
+```
+
+### CLI Commands
+
+charstyle includes a command-line interface for exploring available styles, icons, and table formatting options:
+
+```bash
+# Display a summary of available commands
+python -m charstyle
+
+# Display all available text styles
+python -m charstyle styles
+
+# Display all available icons
+python -m charstyle icons
+
+# Display icons from a specific category
+python -m charstyle icons Hearts
+
+# Display all table formatting examples
+python -m charstyle tables
+
+# Display a specific table style (default, compact, or thin)
+python -m charstyle tables default
+python -m charstyle tables compact
+python -m charstyle tables thin
 ```
 
 ### Complex Styling Functions

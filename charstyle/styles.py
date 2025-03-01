@@ -66,3 +66,10 @@ class Style(StrEnum):
     BG_BRIGHT_MAGENTA = "105"
     BG_BRIGHT_CYAN = "106"
     BG_BRIGHT_WHITE = "107"
+
+    # Semantic styles (aliases for common use cases)
+    ERROR = RED
+    WARNING = YELLOW
+    SUCCESS = GREEN
+    INFO = BLUE
+    DEBUG = MAGENTA

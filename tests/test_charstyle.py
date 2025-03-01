@@ -6,6 +6,7 @@ import os
 import unittest
 from unittest.mock import patch
 
+import charstyle.charstyle
 from charstyle import Style, styled
 from charstyle.charstyle import supports_color
 
@@ -15,6 +16,12 @@ class TestCharstyle(unittest.TestCase):
 
     def setUp(self):
         """Set up the test environment."""
+        # Reset the global cache
+        charstyle.charstyle._SUPPORTS_COLOR = None
+
+        # Clear the lru_cache
+        supports_color.cache_clear()
+
         # Force color support for testing
         os.environ["FORCE_COLOR"] = "1"
         # Ensure sys.stdout.isatty() returns True
@@ -77,8 +84,16 @@ class TestCharstyle(unittest.TestCase):
 
     def test_supports_color(self):
         """Test the supports_color function."""
+        # Reset the global cache and clear the lru_cache
+        charstyle.charstyle._SUPPORTS_COLOR = None
+        supports_color.cache_clear()
+
         # With FORCE_COLOR set, should return True
         self.assertTrue(supports_color())
+
+        # Reset the global cache and clear the lru_cache
+        charstyle.charstyle._SUPPORTS_COLOR = None
+        supports_color.cache_clear()
 
         # With NO_COLOR set, should return False
         os.environ["NO_COLOR"] = "1"

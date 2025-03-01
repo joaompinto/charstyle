@@ -3,18 +3,13 @@
 Example script demonstrating the basic usage of the charstyle library.
 """
 
-from charstyle import Style, styled, supports_color
+from charstyle import Style, styled
 
 
 def main() -> None:
     """
     Demonstrate basic charstyle features.
     """
-    # Check if terminal supports colors
-    if not supports_color():
-        print("Your terminal does not support colors.")
-        return
-
     print("\n=== Basic Color Examples ===")
 
     # Using color constants directly

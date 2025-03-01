@@ -53,6 +53,66 @@ def show_icons() -> None:
         print(f"{bold(category)}: {icons_sequence.strip()}")
 
 
+def show_category(category: str) -> None:
+    """
+    Display terminal icons from a specific category.
+
+    Args:
+        category: The category name to display icons from
+    """
+
+    # Create style functions
+    def bold(text: str) -> str:
+        return styled(text, Style.BOLD)
+
+    def blue(text: str) -> str:
+        return styled(text, Style.BLUE)
+
+    def green(text: str) -> str:
+        return styled(text, Style.GREEN)
+
+    def red(text: str) -> str:
+        return styled(text, Style.RED)
+
+    def yellow(text: str) -> str:
+        return styled(text, Style.YELLOW)
+
+    def cyan(text: str) -> str:
+        return styled(text, Style.CYAN)
+
+    def magenta(text: str) -> str:
+        return styled(text, Style.MAGENTA)
+
+    # Define category colors
+    category_styles = get_category_styles(green, red, yellow, cyan, blue, magenta)
+    categories = get_icon_categories()
+
+    # Check if the category exists
+    available_categories = list(categories.keys())
+    if category not in available_categories:
+        print(f"Category '{category}' not found. Available categories:")
+        for cat in available_categories:
+            print(f"- {cat}")
+        return
+
+    # Display icons for the specified category
+    icon_names = categories[category]
+    print(f"\n{bold(category)} Icons:")
+
+    icons_sequence = ""
+    for i, name in enumerate(icon_names):
+        icon = getattr(Icon, name)
+        style_fn = category_styles[category][i % len(category_styles[category])]
+        icons_sequence += f"{style_fn(icon)} {name}  "
+
+        # Break into multiple lines for readability
+        if (i + 1) % 4 == 0:
+            icons_sequence += "\n"
+
+    print(icons_sequence)
+    print()
+
+
 def get_category_styles(
     green: Callable[[str], str],
     red: Callable[[str], str],

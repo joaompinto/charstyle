@@ -4,30 +4,18 @@ This module provides functions to display terminal styles.
 """
 
 
+def example_header(text: str) -> str:
+    """Display a standardized example header with consistent styling."""
+    from charstyle import Style, styled
+
+    return styled(f"\n{text}", (Style.BOLD, Style.UNDERLINE, Style.BRIGHT_WHITE))
+
+
 def show_styles() -> None:
     """Display all available terminal styles."""
-    from charstyle import Style, styled, supports_color
+    from charstyle import Align, Style, styled, supports_color
 
-    # Create style functions
-    def bold(text: str) -> str:
-        return styled(text, Style.BOLD)
-
-    def red(text: str) -> str:
-        return styled(text, Style.RED)
-
-    def green(text: str) -> str:
-        return styled(text, Style.GREEN)
-
-    def blue(text: str) -> str:
-        return styled(text, Style.BLUE)
-
-    def yellow(text: str) -> str:
-        return styled(text, Style.YELLOW)
-
-    def underline(text: str) -> str:
-        return styled(text, Style.UNDERLINE)
-
-    print("\n=== charstyle Demo ===")
+    print(example_header("charstyle Demo"))
     print("A library for styling terminal text using ANSI escape sequences")
     print()
 
@@ -36,8 +24,12 @@ def show_styles() -> None:
         print("Your terminal does not support colors.")
         exit(1)
 
-    print("=== Text Colors ===")
-    colors = [
+    # Fixed widths for consistent formatting
+    style_name_width = 26  # Enough for "Style.BRIGHT_MAGENTA"
+    example_width = 26  # Enough for "This is bright magenta"
+
+    # Define all style names for different categories
+    color_styles = [
         ("BLACK", Style.BLACK, "BRIGHT_BLACK", Style.BRIGHT_BLACK),
         ("RED", Style.RED, "BRIGHT_RED", Style.BRIGHT_RED),
         ("GREEN", Style.GREEN, "BRIGHT_GREEN", Style.BRIGHT_GREEN),
@@ -48,41 +40,18 @@ def show_styles() -> None:
         ("WHITE", Style.WHITE, "BRIGHT_WHITE", Style.BRIGHT_WHITE),
     ]
 
-    # Calculate the padding needed for each color name
-    # Magenta is the longest: "This text is magenta"
-    max_text_length = len("This text is magenta")
-
-    for name, color, _, bright_color in colors:
-        # Pad the regular text color to match the length of magenta
-        regular_text = name.lower()
-        padding = " " * (max_text_length - len(f"This text is {regular_text}"))
-        print(
-            f"This text is {styled(regular_text, color)}{padding} | This text is {styled(f'bright {regular_text}', bright_color)}"
-        )
-
-    print("\n=== Background Colors ===")
-    backgrounds = [
-        ("BLACK", Style.BG_BLACK, "BRIGHT_BLACK", Style.BG_BRIGHT_BLACK),
-        ("RED", Style.BG_RED, "BRIGHT_RED", Style.BG_BRIGHT_RED),
-        ("GREEN", Style.BG_GREEN, "BRIGHT_GREEN", Style.BG_BRIGHT_GREEN),
-        ("YELLOW", Style.BG_YELLOW, "BRIGHT_YELLOW", Style.BG_BRIGHT_YELLOW),
-        ("BLUE", Style.BG_BLUE, "BRIGHT_BLUE", Style.BG_BRIGHT_BLUE),
-        ("MAGENTA", Style.BG_MAGENTA, "BRIGHT_MAGENTA", Style.BG_BRIGHT_MAGENTA),
-        ("CYAN", Style.BG_CYAN, "BRIGHT_CYAN", Style.BG_BRIGHT_CYAN),
-        ("WHITE", Style.BG_WHITE, "BRIGHT_WHITE", Style.BG_BRIGHT_WHITE),
+    bg_styles = [
+        ("BG_BLACK", Style.BG_BLACK, "BG_BRIGHT_BLACK", Style.BG_BRIGHT_BLACK),
+        ("BG_RED", Style.BG_RED, "BG_BRIGHT_RED", Style.BG_BRIGHT_RED),
+        ("BG_GREEN", Style.BG_GREEN, "BG_BRIGHT_GREEN", Style.BG_BRIGHT_GREEN),
+        ("BG_YELLOW", Style.BG_YELLOW, "BG_BRIGHT_YELLOW", Style.BG_BRIGHT_YELLOW),
+        ("BG_BLUE", Style.BG_BLUE, "BG_BRIGHT_BLUE", Style.BG_BRIGHT_BLUE),
+        ("BG_MAGENTA", Style.BG_MAGENTA, "BG_BRIGHT_MAGENTA", Style.BG_BRIGHT_MAGENTA),
+        ("BG_CYAN", Style.BG_CYAN, "BG_BRIGHT_CYAN", Style.BG_BRIGHT_CYAN),
+        ("BG_WHITE", Style.BG_WHITE, "BG_BRIGHT_WHITE", Style.BG_BRIGHT_WHITE),
     ]
 
-    for name, bg_color, _, bright_bg_color in backgrounds:
-        # Pad the regular background color to match the length of magenta
-        regular_text = name.lower()
-        padding = " " * (max_text_length - len(f"This has a {regular_text} background"))
-        print(
-            f"This has a {styled('black' if name != 'BLACK' else 'white', (Style.BLACK if name != 'BLACK' else Style.WHITE, bg_color))}{padding} | "
-            f"This has a {styled('black' if name != 'BLACK' else 'white', (Style.BLACK if name != 'BLACK' else Style.WHITE, bright_bg_color))} background"
-        )
-
-    print("\n=== Text Styles ===")
-    styles = [
+    text_styles = [
         ("BOLD", Style.BOLD),
         ("DIM", Style.DIM),
         ("ITALIC", Style.ITALIC),
@@ -92,36 +61,89 @@ def show_styles() -> None:
         ("STRIKE", Style.STRIKE),
     ]
 
-    for name, style in styles:
-        print(f"This text is {styled(name.lower(), style)}")
+    combinations = [
+        ("BOLD + RED", (Style.BOLD, Style.RED), "This text is bold and red"),
+        ("UNDERLINE + BLUE", (Style.UNDERLINE, Style.BLUE), "This text is underlined and blue"),
+        (
+            "BOLD + ITALIC + GREEN",
+            (Style.BOLD, Style.ITALIC, Style.GREEN),
+            "This text is bold, italic, and green",
+        ),
+        ("WHITE + BG_RED", (Style.WHITE, Style.BG_RED), "This text is white on red background"),
+        (
+            "BOLD + YELLOW + BG_BLUE",
+            (Style.BOLD, Style.YELLOW, Style.BG_BLUE),
+            "This text is bold yellow on blue background",
+        ),
+    ]
 
-    print("\n=== Combinations ===")
-    print(f"This text is {styled('bold and red', (Style.BOLD, Style.RED))}")
-    print(f"This text is {styled('underlined and blue', (Style.UNDERLINE, Style.BLUE))}")
-    print(
-        f"This text is {styled('bold, italic, and green', (Style.BOLD, Style.ITALIC, Style.GREEN))}"
-    )
-    print(f"This text is {styled('white on red background', (Style.WHITE, Style.BG_RED))}")
-    print(
-        f"This text is {styled('bold yellow on blue background', (Style.BOLD, Style.YELLOW, Style.BG_BLUE))}"
-    )
+    predefined = [
+        ("ERROR", (Style.ERROR, Style.BOLD), "This is an error message"),
+        ("WARNING", (Style.WARNING, Style.BOLD), "This is a warning message"),
+        ("SUCCESS", (Style.SUCCESS, Style.BOLD), "This is a success message"),
+        ("INFO", (Style.INFO, Style.BOLD), "This is an info message"),
+        ("DEBUG", (Style.DEBUG, Style.BOLD), "This is a debug message"),
+    ]
 
-    print("\n=== Nesting ===")
-    print(
-        f"This is {styled('normal with a', Style.WHITE)} {styled('bold', Style.BOLD)} {styled('word', Style.WHITE)}"
-    )
-    print(
-        f"This is {styled('white with a', Style.WHITE)} {styled('red', Style.RED)} {styled('word', Style.WHITE)}"
-    )
-    print(
-        f"This is {styled('normal with', Style.WHITE)} {styled('multiple', Style.BOLD)} {styled('styled', Style.ITALIC)} {styled('words', Style.UNDERLINE)}"
-    )
+    print(example_header("Text Colors"))
+    for name, color, bright_name, bright_color in color_styles:
+        regular_text = name.lower()
+        regular_style = styled(
+            f"Style.{name}", Style.BOLD, width=style_name_width, align=Align.LEFT
+        )
+        regular_example = styled(
+            f"This is {regular_text}", color, width=example_width, align=Align.LEFT
+        )
 
-    print("\n=== Predefined Styles ===")
-    print(f"{styled('This is an error message', (Style.RED, Style.BOLD))}")
-    print(f"{styled('This is a warning message', (Style.YELLOW, Style.BOLD))}")
-    print(f"{styled('This is a success message', (Style.GREEN, Style.BOLD))}")
-    print(f"{styled('This is an info message', (Style.BLUE, Style.BOLD))}")
-    print(f"{styled('This is a debug message', (Style.MAGENTA, Style.BOLD))}")
+        bright_style = styled(
+            f"Style.{bright_name}", Style.BOLD, width=style_name_width, align=Align.LEFT
+        )
+        bright_example = styled(
+            f"This is bright {regular_text}", bright_color, width=example_width, align=Align.LEFT
+        )
 
-    print("\nFor more information, visit: https://github.com/joaompinto/charstyle")
+        print(f"{regular_style} {regular_example} | {bright_style} {bright_example}")
+
+    print(example_header("Background Colors"))
+    for name, bg, bright_name, bright_bg in bg_styles:
+        base_name = name.replace("BG_", "").lower()
+
+        # For regular background colors
+        regular_style = styled(
+            f"Style.{name}", Style.BOLD, width=style_name_width, align=Align.LEFT
+        )
+        regular_text = f"Text on {base_name} background"
+        regular_example = styled(regular_text, bg, width=example_width, align=Align.LEFT)
+
+        # For bright background colors - use the same width but different text
+        bright_style = styled(
+            f"Style.{bright_name}", Style.BOLD, width=style_name_width, align=Align.LEFT
+        )
+        bright_text = f"Text on bright {base_name} bg"  # Shortened to fit
+        bright_example = styled(bright_text, bright_bg, width=example_width, align=Align.LEFT)
+
+        print(f"{regular_style} {regular_example} | {bright_style} {bright_example}")
+
+    print(example_header("Text Styles"))
+    for name, style in text_styles:
+        style_name = styled(f"Style.{name}", Style.BOLD, width=style_name_width, align=Align.LEFT)
+        example = styled(
+            f"This text is {name.lower()}", style, width=example_width, align=Align.LEFT
+        )
+        print(f"{style_name} {example}")
+
+    print(example_header("Combinations"))
+    for name, style_tuple, text in combinations:
+        style_name = styled(f"Style.{name}", Style.BOLD, width=style_name_width, align=Align.LEFT)
+        example = styled(text, style_tuple, width=example_width, align=Align.LEFT)
+        print(f"{style_name} {example}")
+
+    print(example_header("Predefined Styles"))
+    for name, style_tuple, text in predefined:
+        style_name = styled(f"Style.{name}", Style.BOLD, width=style_name_width, align=Align.LEFT)
+        example = styled(text, style_tuple, width=example_width, align=Align.LEFT)
+        print(f"{style_name} {example}")
+
+
+if __name__ == "__main__":
+    show_styles()

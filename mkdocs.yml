@@ -31,6 +31,8 @@ nav:
   - Getting Started: getting-started.md
   - Usage Guide:
     - Basic Usage: usage/basic.md
+    - Text Alignment: usage/alignment.md
+    - Table Formatting: usage/tables.md
     - Advanced Usage: usage/advanced.md
     - Styling Options: usage/styling-options.md
   - API Reference:
@@ -39,5 +41,6 @@ nav:
     - Complex Styling: api/complex-styling.md
   - Examples:
     - Basic Examples: examples/basic.md
+    - Alignment Examples: examples/alignment.md
     - Complex Examples: examples/complex.md
   - Contributing: contributing.md

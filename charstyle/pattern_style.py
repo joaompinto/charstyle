@@ -9,7 +9,7 @@ from re import Pattern
 from typing import Any
 
 from charstyle.charstyle import styled
-from charstyle.style_enum import Style
+from charstyle.styles import Style
 
 # Type alias for style parameters
 StyleType = Style | tuple[Style, ...]

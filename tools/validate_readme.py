@@ -89,7 +89,7 @@ def main():
     # Validate each code block
     all_valid = True
     for i, (block, line_number) in enumerate(code_blocks):
-        print(f"\nBlock {i+1} (line {line_number}):")
+        print(f"\nBlock {i + 1} (line {line_number}):")
         print("-" * 40)
         print(block.strip())
         print("-" * 40)

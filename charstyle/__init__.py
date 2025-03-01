@@ -8,6 +8,7 @@ Requires Python 3.11+ for StrEnum support.
 """
 
 # Import the core styling function and style enum
+from charstyle.align import Align
 from charstyle.charstyle import styled, supports_color
 
 # Import the Icon enum
@@ -20,13 +21,19 @@ from charstyle.pattern_style import (
     styled_pattern_match,
     styled_split,
 )
-from charstyle.style_enum import Style
+from charstyle.styles import Style
+from charstyle.tables import tabled
+
+__version__ = "0.3.0"
 
 __all__ = [
     # Core API
     "styled",
     "Style",
+    "Align",
     "supports_color",
+    "tabled",
+    "__version__",
     # Icon enum
     "Icon",
     # Pattern styling functions
@@ -34,4 +41,5 @@ __all__ = [
     "styled_format",
     "styled_pattern_match",
     "styled_split",
+    # Table functionality
 ]
