@@ -19,9 +19,9 @@ print(styled("Center aligned", Style.CYAN, width=30, align=Align.CENTER))
 
 Output:
 ```
-Left aligned                   
+Left aligned
                   Right aligned
-        Center aligned         
+        Center aligned
 ```
 
 ## Custom Fill Characters
@@ -87,11 +87,11 @@ for row in rows:
 
 Output:
 ```
-  ID         Name             Status    
+  ID         Name             Status
 ----------------------------------------
-  1  Project Alpha            Active    
-  2  Project Beta            Pending    
-  3  Project Gamma            Failed    
+  1  Project Alpha            Active
+  2  Project Beta            Pending
+  3  Project Gamma            Failed
 ```
 
 ## Creating a Dashboard

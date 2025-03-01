@@ -3,7 +3,8 @@
 Example demonstrating the different table styles available in charstyle.
 """
 
-from charstyle import tabled, styled, Style, Align
+from charstyle import Align, Style, styled, tabled
+
 
 def main():
     """Demonstrate the different table styles in charstyle."""
@@ -21,35 +22,41 @@ def main():
     # Default style (Unicode borders with header separator)
     print(styled("\nDefault Style", Style.BOLD))
     print("Unicode borders with header separator:")
-    print(tabled(
-        headers,
-        rows,
-        widths=[5, 15, 15, 10],
-        alignments=[Align.CENTER, Align.LEFT, Align.LEFT, Align.CENTER]
-    ))
+    print(
+        tabled(
+            headers,
+            rows,
+            widths=[5, 15, 15, 10],
+            alignments=[Align.CENTER, Align.LEFT, Align.LEFT, Align.CENTER],
+        )
+    )
 
     # Compact style (no borders, underlined headers)
     print(styled("\nCompact Style", Style.BOLD))
     print("No borders, with bold and underlined headers:")
-    print(tabled(
-        headers,
-        rows,
-        widths=[5, 15, 15, 10],
-        alignments=[Align.CENTER, Align.LEFT, Align.LEFT, Align.CENTER],
-        style="compact",
-        borders=False
-    ))
+    print(
+        tabled(
+            headers,
+            rows,
+            widths=[5, 15, 15, 10],
+            alignments=[Align.CENTER, Align.LEFT, Align.LEFT, Align.CENTER],
+            style="compact",
+            borders=False,
+        )
+    )
 
     # Thin style (Unicode borders, no header separator)
     print(styled("\nThin Style", Style.BOLD))
     print("Unicode borders, no header separator, with bold and underlined headers:")
-    print(tabled(
-        headers,
-        rows,
-        widths=[5, 15, 15, 10],
-        alignments=[Align.CENTER, Align.LEFT, Align.LEFT, Align.CENTER],
-        style="thin"
-    ))
+    print(
+        tabled(
+            headers,
+            rows,
+            widths=[5, 15, 15, 10],
+            alignments=[Align.CENTER, Align.LEFT, Align.LEFT, Align.CENTER],
+            style="thin",
+        )
+    )
 
     # Usage tips
     print(styled("\nUsage Tips", Style.BOLD))

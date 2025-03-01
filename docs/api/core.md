@@ -184,7 +184,7 @@ rows = [
 
 # Default style (Unicode borders)
 print(tabled(
-    headers, 
+    headers,
     rows,
     widths=[5, 20, 10],
     alignments=[Align.CENTER, Align.LEFT, Align.CENTER]
@@ -218,9 +218,9 @@ Output (Default style):
 
 Output (Compact style):
 ```
-ID Name                 Status   
-1  Alice Smith          Active   
-2  Bob Johnson          Inactive 
+ID Name                 Status
+1  Alice Smith          Active
+2  Bob Johnson          Inactive
 ```
 
 Output (Thin style):

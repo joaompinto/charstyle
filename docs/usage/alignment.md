@@ -22,9 +22,9 @@ print(styled("Center aligned", Style.CYAN, width=30, align=Align.CENTER))
 This produces:
 
 ```
-Left aligned                   
+Left aligned
                   Right aligned
-        Center aligned         
+        Center aligned
 ```
 
 ## Custom Fill Characters
@@ -92,11 +92,11 @@ for row in rows:
 This produces a nicely formatted table:
 
 ```
-  ID         Name             Status    
+  ID         Name             Status
 ----------------------------------------
-  1  Project Alpha            Active    
-  2  Project Beta            Pending    
-  3  Project Gamma            Failed    
+  1  Project Alpha            Active
+  2  Project Beta            Pending
+  3  Project Gamma            Failed
 ```
 
 ## Practical Applications
@@ -127,7 +127,7 @@ def progress_bar(percent, width=40):
     """Create a styled progress bar."""
     filled = int(width * percent / 100)
     empty = width - filled
-    
+
     bar = styled("█" * filled, Style.GREEN) + styled("░" * empty, Style.DIM)
     return f"{bar} {styled(f'{percent}%', Style.BOLD)}"
 

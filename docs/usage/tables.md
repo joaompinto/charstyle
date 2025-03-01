@@ -23,7 +23,7 @@ print(tabled(headers, rows))
 This will produce a simple table with automatically calculated column widths:
 
 ```
-ID Name           Department  Status  
+ID Name           Department  Status
 1  Alice Smith    Engineering Active
 2  Bob Johnson    Marketing   Inactive
 3  Carol Williams Finance     Active
@@ -35,7 +35,7 @@ You can add borders with Unicode box-drawing characters to make your tables more
 
 ```python
 print(tabled(
-    headers, 
+    headers,
     rows,
     header_style=Style.BOLD,
     widths=[5, 20, 15, 12],
@@ -85,7 +85,7 @@ def cell_formatter(row, col, value):
     # Format ID column with bold cyan (except header)
     if col == 0 and row >= 0:
         return styled(value, (Style.CYAN, Style.BOLD), align=Align.CENTER)
-    
+
     # Format Department column with different colors based on value
     elif col == 2:
         if value == "Engineering":
@@ -94,7 +94,7 @@ def cell_formatter(row, col, value):
             return styled(value, Style.MAGENTA, align=Align.CENTER)
         elif value == "Finance":
             return styled(value, Style.GREEN, align=Align.CENTER)
-    
+
     # Format Status column with different colors based on value
     elif col == 3:
         if value == "Active":
@@ -103,7 +103,7 @@ def cell_formatter(row, col, value):
             return styled(value, (Style.RED, Style.BOLD))
         else:
             return styled(value, (Style.YELLOW, Style.BOLD))
-            
+
     # Return None for other cells to use default formatting
     return None
 
@@ -144,7 +144,7 @@ print(tabled(
 This creates a more compact table with underlined headers:
 
 ```
-ID Name           Department  Status  
+ID Name           Department  Status
 -----------------------------------
 1  Alice Smith    Engineering Active
 2  Bob Johnson    Marketing   Inactive

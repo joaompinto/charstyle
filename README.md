@@ -109,7 +109,7 @@ print(tabled(headers, rows))
 
 # Styled table with borders (default style)
 print(tabled(
-    headers, 
+    headers,
     rows,
     header_style=Style.BOLD,
     widths=[5, 20, 15, 12],

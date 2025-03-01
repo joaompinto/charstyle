@@ -54,7 +54,7 @@ class CodeExample:
 def extract_code_blocks(markdown_file: Path) -> list[tuple[str, int, str]]:
     """Extract Python code blocks from a markdown file with line numbers and headers."""
     code_blocks = []
-    current_block = []
+    current_block: list[str] = []
     in_code_block = False
     start_line = 0
     current_header = ""
@@ -130,7 +130,7 @@ def split_into_examples(code_block: str) -> list[tuple[str, str]]:
     return examples
 
 
-def test_example(example: CodeExample, extra_imports: list[str] = None) -> tuple[bool, str]:
+def test_example(example: CodeExample, extra_imports: list[str] | None = None) -> tuple[bool, str]:
     """Test a single code example by executing it."""
     if extra_imports is None:
         extra_imports = []
@@ -145,7 +145,7 @@ def test_example(example: CodeExample, extra_imports: list[str] = None) -> tuple
     ]
 
     # Don't add default imports - use the ones in the README examples
-    charstyle_imports = []
+    charstyle_imports: list[str] = []
 
     # Create a temporary file
     with tempfile.NamedTemporaryFile(
@@ -236,7 +236,7 @@ def main() -> int:
         if len(block_examples) == 1 and not block_examples[0][0]:
             # Look for logical chunks separated by blank lines or comments
             logical_chunks = []
-            current_chunk = []
+            current_chunk: list[str] = []
             current_header = ""
 
             for line in code_block.split("\n"):

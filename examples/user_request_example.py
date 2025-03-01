@@ -3,7 +3,7 @@
 Example script demonstrating the requested alignment and width features.
 """
 
-from charstyle import styled, Style, Align
+from charstyle import Align, Style, styled
 
 
 def main() -> None:

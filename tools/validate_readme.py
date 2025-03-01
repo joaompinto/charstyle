@@ -29,7 +29,7 @@ def extract_code_blocks(markdown_file: Path) -> list[tuple[str, int]]:
 
     code_blocks = []
     in_code_block = False
-    current_block = []
+    current_block: list[str] = []
     start_line = 0
 
     for i, line in enumerate(content):

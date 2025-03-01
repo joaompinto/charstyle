@@ -3,7 +3,7 @@
 Example script demonstrating the alignment and width features of the charstyle library.
 """
 
-from charstyle import Style, Align, styled
+from charstyle import Align, Style, styled
 
 
 def main() -> None:
@@ -22,9 +22,9 @@ def main() -> None:
     # Custom fill character examples
     print(styled("Header", Style.BOLD, width=20, fill_char="-", align=Align.CENTER))
     print(styled("Title", Style.UNDERLINE, width=40, fill_char="=", align=Align.CENTER))
-    
+
     print("\n=== Practical Examples ===")
-    
+
     # Table-like formatting
     headers = [
         styled("ID", Style.BOLD, width=5, align=Align.CENTER),
@@ -32,10 +32,10 @@ def main() -> None:
         styled("Status", Style.BOLD, width=15, align=Align.CENTER),
     ]
     print("".join(headers))
-    
+
     # Separator line
     print(styled("", None, width=40, fill_char="-"))
-    
+
     # Table rows
     rows = [
         [
@@ -54,7 +54,7 @@ def main() -> None:
             styled("Failed", Style.RED, width=15, align=Align.CENTER),
         ],
     ]
-    
+
     for row in rows:
         print("".join(row))
 
