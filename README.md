@@ -172,6 +172,35 @@ print(styled(error_message, error_style))
 print(styled("Warning: This is a warning message", warning_style))
 ```
 
+### Hyperlinks in Terminal
+
+```python
+from charstyle import styled, Style
+
+# Basic hyperlink
+print(styled("Click here to visit GitHub", hyperlink="https://github.com"))
+
+# Hyperlink with styling
+print(styled("Styled link to Python website", Style.BLUE, hyperlink="https://python.org"))
+
+# Hyperlink with multiple styles
+print(styled(
+    "Bold underlined link to Wikipedia",
+    (Style.BOLD, Style.UNDERLINE),
+    hyperlink="https://wikipedia.org"
+))
+
+# Hyperlink with alignment and width
+from charstyle import Align
+print(styled(
+    "Centered link with fixed width",
+    Style.GREEN,
+    width=50,
+    align=Align.CENTER,
+    hyperlink="https://example.com"
+))
+```
+
 ### Combining Multiple Styles
 
 ```python

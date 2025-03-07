@@ -10,7 +10,7 @@ When run as `python -m charstyle tables [style]`, this will display a specific t
 
 import argparse
 
-from charstyle import Style, styled
+from charstyle import Style, __version__, styled
 
 
 def show_summary() -> None:
@@ -41,6 +41,9 @@ def main() -> None:
     """Main function for the charstyle CLI."""
     parser = argparse.ArgumentParser(description="Terminal styling utilities")
 
+    # Add version argument
+    parser.add_argument("--version", action="store_true", help="Show charstyle version")
+
     # Create subparsers for the different commands
     subparsers = parser.add_subparsers(dest="command", help="Command to execute")
 
@@ -62,7 +65,9 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    if args.command == "styles":
+    if hasattr(args, "version") and args.version:
+        print(f"charstyle version {__version__}")
+    elif args.command == "styles":
         from charstyle.cli.styles_display import show_styles
 
         show_styles()

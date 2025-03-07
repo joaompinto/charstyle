@@ -78,6 +78,7 @@ def styled(
     width: int | None = None,
     align: Align = Align.LEFT,
     fill_char: str = " ",
+    hyperlink: str | None = None,
 ) -> str:
     """
     Apply styles to text using ANSI escape sequences.
@@ -88,6 +89,7 @@ def styled(
         width (int, optional): Fixed width for the output text
         align (Align, optional): Alignment of the text within the fixed width
         fill_char (str, optional): Character used for filling the fixed width
+        hyperlink (str, optional): URL to link the text to using ANSI hyperlink escape sequence
 
     Returns:
         str: The styled text
@@ -112,6 +114,10 @@ def styled(
             left_padding = padding_needed // 2
             right_padding = padding_needed - left_padding
             text = (fill_char * left_padding) + text + (fill_char * right_padding)
+
+    # Apply hyperlink if specified
+    if hyperlink is not None and supports_color():
+        text = f"\033]8;;{hyperlink}\033\\{text}\033]8;;\033\\"
 
     if not style:
         return text

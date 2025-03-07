@@ -3,7 +3,7 @@
 Example script demonstrating the basic usage of the charstyle library.
 """
 
-from charstyle import Style, styled
+from charstyle import Align, Style, styled
 
 
 def main() -> None:
@@ -66,6 +66,34 @@ def main() -> None:
         styled(
             "Bold italic text with white on red background",
             (Style.BOLD, Style.ITALIC, Style.WHITE, Style.BG_RED),
+        )
+    )
+
+    print("\n=== Hyperlink Examples ===")
+
+    # Basic hyperlink
+    print(styled("Click here to visit GitHub", hyperlink="https://github.com"))
+
+    # Hyperlink with styling
+    print(styled("Styled link to Python website", Style.BLUE, hyperlink="https://python.org"))
+
+    # Hyperlink with multiple styles
+    print(
+        styled(
+            "Bold underlined link to Wikipedia",
+            (Style.BOLD, Style.UNDERLINE),
+            hyperlink="https://wikipedia.org",
+        )
+    )
+
+    # Hyperlink with alignment and width
+    print(
+        styled(
+            "Centered link with fixed width",
+            Style.GREEN,
+            width=50,
+            align=Align.CENTER,
+            hyperlink="https://example.com",
         )
     )
 
